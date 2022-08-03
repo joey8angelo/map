@@ -26,10 +26,11 @@ public:
     void insert(std::pair<T1, T2>);
     void clear();
     void swap(map<T1, T2>&);
+    T2& operator[](T1);
 
 private:
     void clear(Node<T1, T2>*);
-    Node<T1, T2>* insert(std::pair<T1, T2>, Node<T1, T2>*);
+    Node<T1, T2>* insert(std::pair<T1, T2>, Node<T1, T2>*, Node<T1, T2>*&);
     int height(Node<T1, T2>*);
     Node<T1, T2>* L(Node<T1, T2>*);
     Node<T1, T2>* LL(Node<T1, T2>*);

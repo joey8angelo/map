@@ -24,16 +24,19 @@ template <typename T1, typename T2>
 void map<T1, T2>::insert(std::pair<T1, T2> data) {
     if (s == ms)
         return;
-    root = insert(data, root);
+    Node<T1, T2>* dummy = nullptr;
+    root = insert(data, root, dummy);
     s++;
 }
 
 template <typename T1, typename T2>
-Node<T1, T2>* map<T1, T2>::insert(std::pair<T1, T2> data, Node<T1, T2>* node) {
-    if (node == nullptr)
+Node<T1, T2>* map<T1, T2>::insert(std::pair<T1, T2> data, Node<T1, T2>* node, Node<T1, T2>*& newNode) {
+    if (node == nullptr) {
         node = new Node<T1, T2>(data);
+        newNode = node;
+    }
     else if (data.first < node->data.first){
-        node->l = insert(data, node->l);
+        node->l = insert(data, node->l, newNode);
         if (height(node->l) - height(node->r) == 2){
             if (data.first < node->l->data.first)
                 node = L(node);
@@ -42,7 +45,7 @@ Node<T1, T2>* map<T1, T2>::insert(std::pair<T1, T2> data, Node<T1, T2>* node) {
         }
     }
     else if (data.first > node->data.first){
-        node->r = insert(data, node->r);
+        node->r = insert(data, node->r, newNode);
         if (height(node->r) - height(node->l) == 2) {
             if (data.first > node->r->data.first)
                 node = R(node);
@@ -116,4 +119,20 @@ void map<T1, T2>::swap(map<T1, T2>& rhs) {
     int rhsS = rhs.s;
     rhs.s = this->s;
     this->s = rhsS;
+}
+
+template <typename T1, typename T2>
+T2& map<T1, T2>::operator[](T1 t){
+    Node<T1, T2>* curr = root;
+    while (curr != nullptr) { //search for t
+        if (t == curr->data.first)
+            return curr->data.second;
+        else if (t < curr->data.first) 
+            curr = curr->l;
+        else
+            curr = curr->r;
+    }
+    Node<T1, T2>* ptr = nullptr; // if t not found insert new value, ptr passed into insert by reference, when new node made it will be pointed to
+    insert(std::pair<T1, T2>(t, *(new T2)), root, ptr)->data.second;
+    return ptr->data.second;
 }
