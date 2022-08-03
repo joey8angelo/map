@@ -141,11 +141,11 @@ T2& map<T1, T2>::operator[](T1 t){
 
 template <typename T1, typename T2>
 iterator<T1, T2> map<T1, T2>::begin() {
-    iterator<T1, T2> t(root, _size);
+    iterator<T1, T2> t(root);
     return t;
 }
 template <typename T1, typename T2>
 iterator<T1, T2> map<T1, T2>::end() {
-    iterator<T1, T2> t(root, _size, 0);
+    iterator<T1, T2> t(root, 0);
     return t;
 }

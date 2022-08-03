@@ -1,7 +1,7 @@
 #include "iterator.h"
 
 template <typename T1, typename T2>
-iterator<T1, T2>::iterator(Node<T1, T2>* root, int s) : map<T1, T2>(root, s) {
+iterator<T1, T2>::iterator(Node<T1, T2>* root) : root(root) {
     Node<T1, T2>* curr = root;
     while (curr != nullptr){
         nextStack.push(curr);

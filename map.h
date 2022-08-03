@@ -44,7 +44,6 @@ private:
     Node<T1, T2>* RR(Node<T1, T2>*);
     int _size;
     int maxSize;
-protected:
     Node<T1, T2>* root;
 };
 
