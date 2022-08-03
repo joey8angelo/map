@@ -25,7 +25,8 @@ public:
     int max_size();
     void insert(std::pair<T1, T2>);
     void clear();
-    
+    void swap(map<T1, T2>&);
+
 private:
     void clear(Node<T1, T2>*);
     Node<T1, T2>* insert(std::pair<T1, T2>, Node<T1, T2>*);

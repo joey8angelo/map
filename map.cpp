@@ -107,3 +107,13 @@ void map<T1, T2>::clear(Node<T1, T2>* node) {
         delete node;
     }
 }
+
+template <typename T1, typename T2>
+void map<T1, T2>::swap(map<T1, T2>& rhs) {
+    Node<T1, T2>* rhsRoot = rhs.root;
+    rhs.root = this->root;
+    this->root = rhsRoot;
+    int rhsS = rhs.s;
+    rhs.s = this->s;
+    this->s = rhsS;
+}
