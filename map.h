@@ -2,10 +2,13 @@
 #define MAP_H
 
 #include <utility>
+#include <algorithm>
+#include <string>
+#include <iostream>
 
 template <typename T, typename F>
 struct Node{
-    Node(std::pair<T, F> d) : data(d), l(nullptr), r(nullptr), p(nullptr), height(0) {}
+    Node(std::pair<T, F> d) : data(d), l(nullptr), r(nullptr), height(0) {}
     int height;
     std::pair<T, F> data;
     Node* l;
@@ -19,7 +22,7 @@ public:
     bool empty();
     int size();
     int max_size();
-    void insert(std::pair<T, F>); 
+    void insert(std::pair<T, F>);
 private:
     Node<T, F>* insert(std::pair<T, F>, Node<T, F>*);
     int height(Node<T, F>*);
