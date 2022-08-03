@@ -6,31 +6,35 @@
 #include <string>
 #include <iostream>
 
-template <typename T, typename F>
+template <typename T1, typename T2>
 struct Node{
-    Node(std::pair<T, F> d) : data(d), l(nullptr), r(nullptr), height(0) {}
+    Node(std::pair<T1, T2> d) : data(d), l(nullptr), r(nullptr), height(0) {}
     int height;
-    std::pair<T, F> data;
+    std::pair<T1, T2> data;
     Node* l;
     Node* r;
 };
 
-template <typename T, typename F>
+template <typename T1, typename T2>
 class map{
 public:
     map() : root(nullptr), s(0), ms(1000) {}
+    ~map();
     bool empty();
     int size();
     int max_size();
-    void insert(std::pair<T, F>);
+    void insert(std::pair<T1, T2>);
+    void clear();
+    
 private:
-    Node<T, F>* insert(std::pair<T, F>, Node<T, F>*);
-    int height(Node<T, F>*);
-    Node<T, F>* L(Node<T, F>*);
-    Node<T, F>* LL(Node<T, F>*);
-    Node<T, F>* R(Node<T, F>*);
-    Node<T, F>* RR(Node<T, F>*);
-    Node<T, F>* root;
+    void clear(Node<T1, T2>*);
+    Node<T1, T2>* insert(std::pair<T1, T2>, Node<T1, T2>*);
+    int height(Node<T1, T2>*);
+    Node<T1, T2>* L(Node<T1, T2>*);
+    Node<T1, T2>* LL(Node<T1, T2>*);
+    Node<T1, T2>* R(Node<T1, T2>*);
+    Node<T1, T2>* RR(Node<T1, T2>*);
+    Node<T1, T2>* root;
     int s;
     int ms;
 };

@@ -1,32 +1,37 @@
 #include "map.h"
 
-template <typename T, typename F>
-bool map<T, F>::empty() {
+template <typename T1, typename T2>
+map<T1, T2>::~map() {
+    clear(root);
+}
+
+template <typename T1, typename T2>
+bool map<T1, T2>::empty() {
     return root == nullptr;
 }
 
-template <typename T, typename F>
-int map<T, F>::size() {
+template <typename T1, typename T2>
+int map<T1, T2>::size() {
     return this->s;
 }
 
-template <typename T, typename F>
-int map<T, F>::max_size() {
+template <typename T1, typename T2>
+int map<T1, T2>::max_size() {
     return this->ms;
 }
 
-template <typename T, typename F>
-void map<T, F>::insert(std::pair<T, F> data) {
+template <typename T1, typename T2>
+void map<T1, T2>::insert(std::pair<T1, T2> data) {
     if (s == ms)
         return;
     root = insert(data, root);
     s++;
 }
 
-template <typename T, typename F>
-Node<T, F>* map<T, F>::insert(std::pair<T, F> data, Node<T, F>* node) {
+template <typename T1, typename T2>
+Node<T1, T2>* map<T1, T2>::insert(std::pair<T1, T2> data, Node<T1, T2>* node) {
     if (node == nullptr)
-        node = new Node<T, F>(data);
+        node = new Node<T1, T2>(data);
     else if (data.first < node->data.first){
         node->l = insert(data, node->l);
         if (height(node->l) - height(node->r) == 2){
@@ -49,14 +54,14 @@ Node<T, F>* map<T, F>::insert(std::pair<T, F> data, Node<T, F>* node) {
     return node;
 }
 
-template <typename T, typename F>
-int map<T, F>::height(Node<T, F>* node) {
+template <typename T1, typename T2>
+int map<T1, T2>::height(Node<T1, T2>* node) {
     return (node == nullptr) ? -1 : node->height;
 }
 
-template <typename T, typename F>
-Node<T, F>* map<T, F>::L(Node<T, F>* node) {
-    Node<T, F>* curr = node->l;
+template <typename T1, typename T2>
+Node<T1, T2>* map<T1, T2>::L(Node<T1, T2>* node) {
+    Node<T1, T2>* curr = node->l;
     node->l = curr->r;
     curr->r = node;
     node->height = std::max(height(node->l), height(node->r)) + 1;
@@ -64,15 +69,15 @@ Node<T, F>* map<T, F>::L(Node<T, F>* node) {
     return curr;
 }
 
-template <typename T, typename F>
-Node<T, F>* map<T, F>::LL(Node<T, F>* node) {
+template <typename T1, typename T2>
+Node<T1, T2>* map<T1, T2>::LL(Node<T1, T2>* node) {
     node->l = R(node->l);
     return L(node);
 }
 
-template <typename T, typename F>
-Node<T, F>* map<T, F>::R(Node<T, F>* node) {
-    Node<T, F>* curr = node->r;
+template <typename T1, typename T2>
+Node<T1, T2>* map<T1, T2>::R(Node<T1, T2>* node) {
+    Node<T1, T2>* curr = node->r;
     node->r = curr->l;
     curr->l = node;
     node->height = std::max(height(node->l), height(node->r)) + 1;
@@ -81,8 +86,24 @@ Node<T, F>* map<T, F>::R(Node<T, F>* node) {
     
 }
 
-template <typename T, typename F>
-Node<T, F>* map<T, F>::RR(Node<T, F>* node) {
+template <typename T1, typename T2>
+Node<T1, T2>* map<T1, T2>::RR(Node<T1, T2>* node) {
     node->r = L(node->r);
     return R(node);
+}
+
+template <typename T1, typename T2>
+void map<T1, T2>::clear() {
+    clear(root);
+}
+
+template <typename T1, typename T2>
+void map<T1, T2>::clear(Node<T1, T2>* node) {
+    if (node == nullptr)
+        return;
+    else {
+        clear(node->r);
+        clear(node->l);
+        delete node;
+    }
 }
