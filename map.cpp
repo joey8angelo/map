@@ -12,21 +12,21 @@ bool map<T1, T2>::empty() {
 
 template <typename T1, typename T2>
 int map<T1, T2>::size() {
-    return this->s;
+    return this->_size;
 }
 
 template <typename T1, typename T2>
 int map<T1, T2>::max_size() {
-    return this->ms;
+    return this->maxSize;
 }
 
 template <typename T1, typename T2>
 void map<T1, T2>::insert(std::pair<T1, T2> data) {
-    if (s == ms)
+    if (_size == maxSize)
         return;
     Node<T1, T2>* dummy = nullptr;
     root = insert(data, root, dummy);
-    s++;
+    _size++;
 }
 
 template <typename T1, typename T2>
@@ -116,9 +116,9 @@ void map<T1, T2>::swap(map<T1, T2>& rhs) {
     Node<T1, T2>* rhsRoot = rhs.root;
     rhs.root = this->root;
     this->root = rhsRoot;
-    int rhsS = rhs.s;
-    rhs.s = this->s;
-    this->s = rhsS;
+    int rhsS = rhs._size;
+    rhs._size = this->_size;
+    this->_size = rhsS;
 }
 
 template <typename T1, typename T2>
@@ -137,4 +137,15 @@ T2& map<T1, T2>::operator[](T1 t){
     insert(std::pair<T1, T2>(t, *(newT2)), root, ptr);
     delete newT2;
     return ptr->data.second;
+}
+
+template <typename T1, typename T2>
+iterator<T1, T2> map<T1, T2>::begin() {
+    iterator<T1, T2> t(root, _size);
+    return t;
+}
+template <typename T1, typename T2>
+iterator<T1, T2> map<T1, T2>::end() {
+    iterator<T1, T2> t(root, _size, 0);
+    return t;
 }
