@@ -133,6 +133,8 @@ T2& map<T1, T2>::operator[](T1 t){
             curr = curr->r;
     }
     Node<T1, T2>* ptr = nullptr; // if t not found insert new value, ptr passed into insert by reference, when new node made it will be pointed to
-    insert(std::pair<T1, T2>(t, *(new T2)), root, ptr)->data.second;
+    T2* newT2 = new T2;
+    insert(std::pair<T1, T2>(t, *(newT2)), root, ptr);
+    delete newT2;
     return ptr->data.second;
 }
