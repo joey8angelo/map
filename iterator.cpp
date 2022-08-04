@@ -4,7 +4,7 @@
 template <typename T1, typename T2>
 iterator<T1, T2>::iterator(Node<T1, T2>* root) : root(root) {
     if(root == nullptr)
-        return iterator<T1, T2>(root, 0);
+        return;
     Node<T1, T2>* curr = root;
     while (curr != nullptr){
         nextStack.push(curr);

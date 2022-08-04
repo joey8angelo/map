@@ -26,5 +26,17 @@ int main() {
     std::cout << "mp1 size: " << mp1.size() << std::endl;
     std::cout << "mp2 size: " << mp2.size() << std::endl;
 
+    if (mp2.find(1001) != mp2.end())
+        std::cout << mp2[1001] << std::endl;
+    else
+        std::cout << "could not find key 1001" << std::endl;
+
+    if (mp2.find(5) != mp2.end())
+        std::cout << mp2[5] << std::endl;
+    else
+        std::cout << "could not find key 5" << std::endl;
+
+    std::cout << "key: " << mp2.find(5).first() << " value: " <<mp2.find(5).second() << std::endl;
+
     return 0;
 }

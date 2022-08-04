@@ -33,6 +33,7 @@ public:
     T2& operator[](T1);
     iterator<T1, T2> begin();
     iterator<T1, T2> end();
+    iterator<T1, T2> find(const T1&);
 
 private:
     void clear(Node<T1, T2>*);

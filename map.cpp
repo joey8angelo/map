@@ -29,7 +29,8 @@ template <typename T1, typename T2>
 void map<T1, T2>::insert(std::pair<T1, T2> data) {
     if (_size == maxSize) // do nothing when max size reached
         return;
-    root = insert(data, root, nullptr);
+    Node<T1, T2>* dummy = nullptr;
+    root = insert(data, root, dummy);
     _size++;
 }
 
@@ -149,7 +150,7 @@ T2& map<T1, T2>::operator[](T1 t){
             curr = curr->r;
     }
     Node<T1, T2>* ptr = nullptr; // pointer to element after insertion
-    insert(std::pair<T1, T2>(t, T2()), root, ptr);
+    root = insert(std::pair<T1, T2>(t, T2()), root, ptr);
     _size++;
     return ptr->data.second;
 }
@@ -160,8 +161,25 @@ iterator<T1, T2> map<T1, T2>::begin() {
     return iterator<T1, T2>(root);
 }
 
-/* returns iterator referring to the past-the-end element in map */
+/* returns iterator referring to the past-the-end element in map 
+   unlike std::map the end iterator cannot be accessed and will cause a seg fault */
 template <typename T1, typename T2>
 iterator<T1, T2> map<T1, T2>::end() {
     return iterator<T1, T2>(root, 0);
+}
+
+/* returns iterator of the element with the given key, if no element is found
+   returns an iterator to the past-the-end element*/
+template <typename T1, typename T2>
+iterator<T1, T2> map<T1, T2>::find(const T1& key) {
+    Node<T1, T2>* curr = root;
+    while (curr != nullptr) {
+        if (key == curr->data.first)
+            return iterator<T1, T2>(curr);
+        else if (key < curr->data.first)
+            curr = curr->l;
+        else
+            curr = curr->r;
+    }
+    return this->end();
 }
