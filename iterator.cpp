@@ -12,7 +12,7 @@ iterator<T1, T2>::iterator(Node<T1, T2>* root) {
     }
 }
 
-/* constructor for iterator to find an internal node iterator will be a past-the-end iterator if key not found */
+/* constructor for iterator to find an internal node, iterator will be a past-the-end iterator if key not found */
 template <typename T1, typename T2>
 iterator<T1, T2>::iterator(Node<T1, T2>* root, const T1& key) {
     if(root == nullptr)
@@ -20,12 +20,15 @@ iterator<T1, T2>::iterator(Node<T1, T2>* root, const T1& key) {
     Node<T1, T2>* curr = root;
     while(curr != nullptr) {
         nextStack.push(curr);
-        if (curr->data.first == node->data.first)
+        if (curr->data.first == key)
             return;
-        else if (node->data.first < curr->data.first)
+        else if (key < curr->data.first)
             curr = curr->l;
         else
             curr = curr->r;
+    }
+    while(!nextStack.empty()){
+        nextStack.pop();
     }
 }
 

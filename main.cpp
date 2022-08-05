@@ -2,6 +2,9 @@
 #include "map.cpp"
 #include "iterator.cpp"
 
+using std::cout;
+using std::endl;
+
 int main() {
     map<int, int> mp1, mp2;
 
@@ -10,7 +13,16 @@ int main() {
     mp1.insert(std::pair<int, int>(5, 6));
     mp1.insert(std::pair<int, int>(7, 8));
     mp1.insert(std::pair<int, int>(7, 8));
-    mp1.insert(std::pair<int, int>(7, 8));
+
+    if (!mp1.emplace(7, 8).second)
+        cout << "key 7 already in map" << endl;
+    else
+        cout << "7, 8 emplaced" << endl;
+
+    if (!mp1.emplace(8, 9).second)
+        cout << "key 8 already in map" << endl;
+    else
+        cout << "8, 9 emplaced" << endl;
 
     mp1[2];
     mp1.find(2).second() = 3;
@@ -18,7 +30,7 @@ int main() {
     mp1[6] = 7;
 
     for (iterator<int, int> b = mp1.begin(); b != mp1.end(); ++b) {
-        std::cout << b.first() << " - " << b.second() << std::endl;
+        cout << b.first() << " - " << b.second() << endl;
     }
     mp1.clear();
     if (mp1.empty()) {
@@ -28,20 +40,20 @@ int main() {
     }
 
     mp1.swap(mp2);
-    std::cout << "mp1 size: " << mp1.size() << std::endl;
-    std::cout << "mp2 size: " << mp2.size() << std::endl;
+    cout << "mp1 size: " << mp1.size() << endl;
+    cout << "mp2 size: " << mp2.size() << endl;
 
     if (mp2.find(1001) != mp2.end())
-        std::cout << mp2[1001] << std::endl;
+        cout << mp2[1001] << endl;
     else
-        std::cout << "could not find key 1001" << std::endl;
+        cout << "could not find key 1001" << endl;
 
     if (mp2.find(5) != mp2.end())
-        std::cout << mp2[5] << std::endl;
+        cout << mp2[5] << endl;
     else
-        std::cout << "could not find key 5" << std::endl;
+        cout << "could not find key 5" << endl;
 
-    std::cout << mp2.find(5).first() << std::endl;
+    cout << mp2.find(5).first() << endl;
 
     return 0;
 }

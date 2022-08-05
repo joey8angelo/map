@@ -49,7 +49,11 @@ Node<T1, T2>* map<T1, T2>::insert(std::pair<T1, T2> data, Node<T1, T2>* node, No
         return nullptr;
     }
     else if (data.first < node->data.first){
-        node->l = insert(data, node->l, newNode);
+        Node<T1, T2>* tmp = insert(data, node->l, newNode);
+        if (tmp == nullptr)
+            return nullptr;
+        else
+            node->l = tmp;
         if (height(node->l) - height(node->r) == 2){
             if (data.first < node->l->data.first)
                 node = L(node);
@@ -58,7 +62,11 @@ Node<T1, T2>* map<T1, T2>::insert(std::pair<T1, T2> data, Node<T1, T2>* node, No
         }
     }
     else if (data.first > node->data.first){
-        node->r = insert(data, node->r, newNode);
+        Node<T1, T2>* tmp = insert(data, node->r, newNode);
+        if (tmp == nullptr)
+            return nullptr;
+        else
+            node->r = tmp;
         if (height(node->r) - height(node->l) == 2) {
             if (data.first > node->r->data.first)
                 node = R(node);
@@ -172,15 +180,14 @@ iterator<T1, T2> map<T1, T2>::begin() {
    unlike std::map the end iterator cannot be accessed and will cause a seg fault */
 template <typename T1, typename T2>
 iterator<T1, T2> map<T1, T2>::end() {
-    return iterator<T1, T2>(root, 0);
+    return iterator<T1, T2>();
 }
 
 /* returns iterator of the element with the given key, if no element is found
    returns an iterator to the past-the-end element*/
 template <typename T1, typename T2>
 iterator<T1, T2> map<T1, T2>::find(const T1& key) {
-    Node<T1, T2>* curr = root;
-    return iterator<T1, T2>(root, key)
+    return iterator<T1, T2>(root, key);
 }
 
 /* counts elements with specific key
@@ -188,4 +195,15 @@ iterator<T1, T2> map<T1, T2>::find(const T1& key) {
 template <typename T1, typename T2>
 int const map<T1, T2>::count(const T1& key) {
     return find(key) != end() ? 1 : 0;
+}
+
+/* inserts new element if key is unique returns pair<iterator, bool> */
+template <typename T1, typename T2>
+std::pair<iterator<T1, T2>, bool> map<T1, T2>::emplace(T1 key, T2 value) {
+    Node<T1, T2>* ins = nullptr;
+    insert(std::pair<T1, T2>(key, value), root, ins);
+    if (ins == nullptr)
+        return std::pair<iterator<T1, T2>, bool>(end(), false);
+    else
+        return std::pair<iterator<T1, T2>, bool>(find(key), true);
 }
