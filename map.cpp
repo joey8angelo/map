@@ -30,7 +30,11 @@ void map<T1, T2>::insert(std::pair<T1, T2> data) {
     if (_size == maxSize) // do nothing when max size reached
         return;
     Node<T1, T2>* dummy = nullptr;
-    root = insert(data, root, dummy);
+    Node<T1, T2>* node = insert(data, root, dummy);
+    if (node == nullptr)
+        return;
+    else
+        root = node;
     _size++;
 }
 
@@ -40,6 +44,9 @@ Node<T1, T2>* map<T1, T2>::insert(std::pair<T1, T2> data, Node<T1, T2>* node, No
     if (node == nullptr) {
         node = new Node<T1, T2>(data);
         newNode = node;
+    }
+    else if (node->data.first == data.first) {
+        return nullptr;
     }
     else if (data.first < node->data.first){
         node->l = insert(data, node->l, newNode);
