@@ -41,7 +41,7 @@ int main() {
     else
         std::cout << "could not find key 5" << std::endl;
 
-    std::cout << "key: " << mp2.find(5).first() << " value: " <<mp2.find(5).second() << std::endl;
+    std::cout << mp2.find(5).first() << std::endl;
 
     return 0;
 }

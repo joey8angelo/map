@@ -2,13 +2,30 @@
 
 /* constructor */
 template <typename T1, typename T2>
-iterator<T1, T2>::iterator(Node<T1, T2>* root) : root(root) {
+iterator<T1, T2>::iterator(Node<T1, T2>* root) {
     if(root == nullptr)
         return;
     Node<T1, T2>* curr = root;
     while (curr != nullptr){
         nextStack.push(curr);
         curr = curr->l;
+    }
+}
+
+/* constructor for iterator to find an internal node iterator will be a past-the-end iterator if key not found */
+template <typename T1, typename T2>
+iterator<T1, T2>::iterator(Node<T1, T2>* root, const T1& key) {
+    if(root == nullptr)
+        return;
+    Node<T1, T2>* curr = root;
+    while(curr != nullptr) {
+        nextStack.push(curr);
+        if (curr->data.first == node->data.first)
+            return;
+        else if (node->data.first < curr->data.first)
+            curr = curr->l;
+        else
+            curr = curr->r;
     }
 }
 

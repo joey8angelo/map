@@ -180,13 +180,12 @@ iterator<T1, T2> map<T1, T2>::end() {
 template <typename T1, typename T2>
 iterator<T1, T2> map<T1, T2>::find(const T1& key) {
     Node<T1, T2>* curr = root;
-    while (curr != nullptr) {
-        if (key == curr->data.first)
-            return iterator<T1, T2>(curr);
-        else if (key < curr->data.first)
-            curr = curr->l;
-        else
-            curr = curr->r;
-    }
-    return this->end();
+    return iterator<T1, T2>(root, key)
+}
+
+/* counts elements with specific key
+   map can only have one instance of a specific key so return will be 0 or 1 */
+template <typename T1, typename T2>
+int const map<T1, T2>::count(const T1& key) {
+    return find(key) != end() ? 1 : 0;
 }
