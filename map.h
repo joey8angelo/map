@@ -31,13 +31,14 @@ public:
     void insert(std::pair<T1, T2>);
     void clear();
     void swap(map<T1, T2>&);
-    T2& operator[](T1);
+    T2& operator[](const T1&);
     map<T1, T2>& operator=(const map<T1, T2>&);
     iterator<T1, T2> begin();
     iterator<T1, T2> end();
     iterator<T1, T2> find(const T1&);
     int const count(const T1&);
     std::pair<iterator<T1, T2>, bool> emplace(T1, T2);
+    T2& at(const T1&);
 
 private:
     Node<T1, T2>* equalHelper(Node<T1, T2>*);

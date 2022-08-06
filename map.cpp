@@ -154,7 +154,7 @@ void map<T1, T2>::swap(map<T1, T2>& rhs) {
 
 /* access operator, if key not found creates a new element with default value */
 template <typename T1, typename T2>
-T2& map<T1, T2>::operator[](T1 t){
+T2& map<T1, T2>::operator[](const T1& t){
     Node<T1, T2>* curr = root;
     while (curr != nullptr) {
         if (t == curr->data.first)
@@ -227,4 +227,21 @@ Node<T1, T2>* map<T1, T2>::equalHelper(Node<T1, T2>* node) {
     curr->l = equalHelper(node->l);
     curr->r = equalHelper(node->r);
     return curr;
+}
+
+/* returns a reference to the value mapped at key, will throw out_of_range if key does not exist */
+template <typename T1, typename T2>
+T2& map<T1, T2>::at(const T1& key) {
+    Node<T1, T2>* curr = root;
+    while(curr != nullptr) {
+        if (key == curr->data.first) {
+            return curr->data.second;
+        }
+        else if (key < curr->data.first) {
+            curr = curr->l;
+        }
+        else
+            curr = curr->r;
+    }
+    throw std::out_of_range("map::at");
 }

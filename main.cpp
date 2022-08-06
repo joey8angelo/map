@@ -60,6 +60,20 @@ int main() {
     cout << mp1.find(5).first() << endl;
 
     mp1 = map<int, int>();
+    mp1[4];
+
+    try {
+        cout << mp1.at(5) << endl;
+    } catch(std::out_of_range& m) {
+        cout << "Out of range: " << m.what() << endl;
+    }
+
+    try {
+        mp1.at(4) = 10;
+        cout << "insert " << mp1.at(4) << " at key 4 with map::at" << endl;
+    } catch(std::out_of_range& m) {
+        cout << "Out of range: " << m.what() << endl;
+    }
 
     return 0;
 }
