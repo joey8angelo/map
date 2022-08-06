@@ -207,3 +207,24 @@ std::pair<iterator<T1, T2>, bool> map<T1, T2>::emplace(T1 key, T2 value) {
     else
         return std::pair<iterator<T1, T2>, bool>(find(key), true);
 }
+
+/* copies contents of rhs into lhs, removing its current content */
+template <typename T1, typename T2>
+map<T1, T2>& map<T1, T2>::operator=(const map<T1, T2>& rhs) {
+    clear();
+    root = equalHelper(rhs.root);
+    _size = rhs._size;
+}
+
+/* helper for operator=, linearly copies all elements recursively */
+template <typename T1, typename T2>
+Node<T1, T2>* map<T1, T2>::equalHelper(Node<T1, T2>* node) {
+    if (node == nullptr) {
+        return nullptr;
+    }
+
+    Node<T1, T2>* curr = new Node<T1, T2>(node->data, node->height);
+    curr->l = equalHelper(node->l);
+    curr->r = equalHelper(node->r);
+    return curr;
+}

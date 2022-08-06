@@ -55,5 +55,11 @@ int main() {
 
     cout << mp2.find(5).first() << endl;
 
+    mp1 = mp2;
+
+    cout << mp1.find(5).first() << endl;
+
+    mp1 = map<int, int>();
+
     return 0;
 }

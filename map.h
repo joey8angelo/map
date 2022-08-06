@@ -12,6 +12,7 @@ class iterator;
 template <typename T1, typename T2>
 struct Node{
     Node(std::pair<T1, T2> d) : data(d), l(nullptr), r(nullptr), height(0) {}
+    Node(std::pair<T1, T2> d, int h) : data(d), l(nullptr), r(nullptr), height(h) {}
     int height;
     std::pair<T1, T2> data;
     Node* l;
@@ -31,6 +32,7 @@ public:
     void clear();
     void swap(map<T1, T2>&);
     T2& operator[](T1);
+    map<T1, T2>& operator=(const map<T1, T2>&);
     iterator<T1, T2> begin();
     iterator<T1, T2> end();
     iterator<T1, T2> find(const T1&);
@@ -38,6 +40,7 @@ public:
     std::pair<iterator<T1, T2>, bool> emplace(T1, T2);
 
 private:
+    Node<T1, T2>* equalHelper(Node<T1, T2>*);
     void clear(Node<T1, T2>*);
     Node<T1, T2>* insert(std::pair<T1, T2>, Node<T1, T2>*, Node<T1, T2>*&);
     int height(Node<T1, T2>*);
