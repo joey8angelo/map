@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <string>
 #include <iostream>
+#include <stack>
 
 template <typename T1, typename T2>
 class iterator;
@@ -39,6 +40,8 @@ public:
     int const count(const T1&);
     std::pair<iterator<T1, T2>, bool> emplace(T1, T2);
     T2& at(const T1&);
+    void erase(iterator<T1, T2>);
+    void erase(const T1&);
 
 private:
     Node<T1, T2>* equalHelper(Node<T1, T2>*);

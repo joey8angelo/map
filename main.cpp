@@ -34,7 +34,7 @@ int main() {
     }
     mp1.clear();
     if (mp1.empty()) {
-        for (int i = 0; i < mp1.max_size(); i++) {
+        for (int i = 0; i < 1000; i++) {
             mp1[i] = i + 1;
         }
     }
@@ -73,6 +73,11 @@ int main() {
         cout << "insert " << mp1.at(4) << " at key 4 with map::at" << endl;
     } catch(std::out_of_range& m) {
         cout << "Out of range: " << m.what() << endl;
+    }
+
+    srand(2);
+    while (!mp2.empty()) {
+        mp2.erase(rand() % 1000);
     }
 
     return 0;

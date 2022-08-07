@@ -47,6 +47,8 @@ T2& iterator<T1, T2>::second() {
 /* increments iterator to the next inOrder value */
 template <typename T1, typename T2>
 void iterator<T1, T2>::operator++() {
+    if(nextStack.empty())
+        return;
     Node<T1, T2>* curr = nextStack.top()->r;
     nextStack.pop();
     while (curr != nullptr) {

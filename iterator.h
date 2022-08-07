@@ -17,6 +17,7 @@ public:
     void operator++();
     bool operator==(iterator);
     bool operator!=(iterator);
+    friend class map<T1, T2>;
 
 };
 

@@ -245,3 +245,119 @@ T2& map<T1, T2>::at(const T1& key) {
     }
     throw std::out_of_range("map::at");
 }
+
+/* erase an key value pair from the map with an iterator, invalidates all iterators */
+template <typename T1, typename T2>
+void map<T1, T2>::erase(iterator<T1, T2> itr) {
+    if (itr == end()) // if itr refers to nothing do nothing
+        return;
+    
+    // do a normal BST delete
+    Node<T1, T2>* node = itr.nextStack.top(); // store node to delete
+    itr.nextStack.pop();
+
+    if (node->l == nullptr && node->r == nullptr) { // case 1: leaf node
+        if (!itr.nextStack.empty()) {               // parent of node to delete points to nullptr
+            if (itr.nextStack.top()->r == node)
+                itr.nextStack.top()->r = nullptr;
+            else
+                itr.nextStack.top()->l = nullptr;
+        }
+        else
+            root = nullptr; // if node has no parent it is the root
+    }
+    else if (node->r != nullptr && node->l != nullptr) { // case 2: node has two children
+        std::stack<Node<T1, T2>*> st = itr.nextStack; // new stack = itr stack
+        Node<T1, T2>* curr = node;
+        st.push(curr);
+        curr = curr->l;
+        st.push(curr);
+        while (curr->r != nullptr) { // store elements in the path to the rightmost node of left subtree
+            curr = curr->r;
+            st.push(curr);
+        }
+        std::pair<T1, T2> d = curr->data; // swap node to delete with rightmost node of left subtree
+        curr->data = node->data;
+        node->data = d;
+        iterator<T1, T2> itr2 = begin();
+        itr2.nextStack = st;
+        erase(itr2); // make new iterator with new stack and erase the swapped node
+        return;
+    }
+    else { // case 3: node has 1 child
+        if (!itr.nextStack.empty()) {
+            if (itr.nextStack.top()->r == node) // point parent to nodes child
+                itr.nextStack.top()->r = node->r == nullptr ? node->l : node->r;
+            else
+                itr.nextStack.top()->l = node->r == nullptr ? node->l : node->r;
+        }
+        else
+            root = node->r == nullptr ? node->l : node->r; // if node has no parent it is the root
+    }
+
+    // update heights and rotate when needed nodes above the node to delete
+    while (!itr.nextStack.empty()) {
+        itr.nextStack.top()->height = std::max(height(itr.nextStack.top()->l), height(itr.nextStack.top()->r)) + 1;
+
+        int bf = height(itr.nextStack.top()->r) - height(itr.nextStack.top()->l); // balance factor
+        if (bf == 2) { // positive balance factor 2 requires rotate right
+
+            Node<T1, T2>* t;
+            Node<T1, T2>* prev;
+
+            if (height(itr.nextStack.top()->r->r) >= height(itr.nextStack.top()->r->l)) { // if right bf >= left bf normal rotate
+                t = R(itr.nextStack.top());
+                prev = itr.nextStack.top();
+                itr.nextStack.pop();
+            }
+            else { // if not rotate 2 times
+                t = RR(itr.nextStack.top());
+                prev = itr.nextStack.top();
+                itr.nextStack.pop();
+            }
+            if (itr.nextStack.empty()) { // if stack empty the result of rotate is the root
+                root = t;
+            }
+            else{ // if not empty result of rotate is child of top of stack
+                if (itr.nextStack.top()->r == prev)
+                    itr.nextStack.top()->r = t;
+                else
+                    itr.nextStack.top()->l = t;
+            }
+        }
+        else if (bf == -2) { // same logic as right
+
+            Node<T1, T2>* t;
+            Node<T1, T2>* prev;
+
+            if (height(itr.nextStack.top()->l->l) >= height(itr.nextStack.top()->l->r)) {
+                t = L(itr.nextStack.top());
+                prev = itr.nextStack.top();
+                itr.nextStack.pop();
+            }
+            else {
+                t = LL(itr.nextStack.top());
+                prev = itr.nextStack.top();
+                itr.nextStack.pop();
+            }
+            if (itr.nextStack.empty()) {
+                root = t;
+            }
+            else{
+                if (itr.nextStack.top()->r == prev)
+                    itr.nextStack.top()->r = t;
+                else
+                    itr.nextStack.top()->l = t;
+            }
+        }
+        else
+            itr.nextStack.pop(); // if no rotate required move on to next node
+    }
+    delete node;
+    _size--;
+}
+
+template <typename T1, typename T2>
+void map<T1, T2>::erase(const T1& key) {
+    erase(find(key));
+}
