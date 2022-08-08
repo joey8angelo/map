@@ -68,3 +68,28 @@ template <typename T1, typename T2>
 bool iterator<T1, T2>::operator!=(iterator rhs) {
     return this->nextStack != rhs.nextStack;
 }
+
+/* constructor */
+template <typename T1, typename T2>
+reverse_iterator<T1, T2>::reverse_iterator(Node<T1, T2>* root) : iterator<T1, T2>::iterator() {
+    if(root == nullptr)
+        return;
+    Node<T1, T2>* curr = root;
+    while (curr != nullptr){
+        iterator<T1, T2>::nextStack.push(curr);
+        curr = curr->r;
+    }
+}
+
+/* increments iterator to the next reverse inOrder value */
+template <typename T1, typename T2>
+void reverse_iterator<T1, T2>::operator++() {
+    if(iterator<T1, T2>::nextStack.empty())
+        return;
+    Node<T1, T2>* curr = iterator<T1, T2>::nextStack.top()->l;
+    iterator<T1, T2>::nextStack.pop();
+    while (curr != nullptr) {
+        iterator<T1, T2>::nextStack.push(curr);
+        curr = curr->r;
+    }
+}

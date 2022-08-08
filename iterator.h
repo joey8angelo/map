@@ -6,7 +6,7 @@
 
 template <typename T1, typename T2>
 class iterator{
-private:
+protected:
     std::stack<Node<T1, T2>*> nextStack;
 public:
     iterator(Node<T1, T2>*);
@@ -18,7 +18,15 @@ public:
     bool operator==(iterator);
     bool operator!=(iterator);
     friend class map<T1, T2>;
+};
 
+template <typename T1, typename T2>
+class reverse_iterator: public iterator<T1, T2>{
+public:
+    reverse_iterator(Node<T1, T2>*);
+    reverse_iterator(): iterator<T1, T2>::iterator() {}
+    reverse_iterator(Node<T1, T2>* n, const T1& t): iterator<T1, T2>::iterator(n, t) {}
+    void operator++();
 };
 
 #endif

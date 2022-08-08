@@ -9,6 +9,8 @@
 
 template <typename T1, typename T2>
 class iterator;
+template <typename T1, typename T2>
+class reverse_iterator;
 
 template <typename T1, typename T2>
 struct Node{
@@ -36,6 +38,8 @@ public:
     map<T1, T2>& operator=(const map<T1, T2>&);
     iterator<T1, T2> begin();
     iterator<T1, T2> end();
+    reverse_iterator<T1, T2> rbegin();
+    reverse_iterator<T1, T2> rend();
     iterator<T1, T2> find(const T1&);
     int const count(const T1&);
     std::pair<iterator<T1, T2>, bool> emplace(T1, T2);

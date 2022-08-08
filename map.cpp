@@ -183,6 +183,19 @@ iterator<T1, T2> map<T1, T2>::end() {
     return iterator<T1, T2>();
 }
 
+/* returns reverse_iterator referring to last element in map */
+template <typename T1, typename T2>
+reverse_iterator<T1, T2> map<T1, T2>::rbegin() {
+    return reverse_iterator<T1, T2>(root);
+}
+
+/* returns reverse_iterator referring to the past-the-end element in map 
+   unlike std::map the end iterator cannot be accessed and will cause a seg fault */
+template <typename T1, typename T2>
+reverse_iterator<T1, T2> map<T1, T2>::rend() {
+    return reverse_iterator<T1, T2>();
+}
+
 /* returns iterator of the element with the given key, if no element is found
    returns an iterator to the past-the-end element*/
 template <typename T1, typename T2>
