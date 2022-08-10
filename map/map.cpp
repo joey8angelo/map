@@ -29,8 +29,8 @@ template <typename T1, typename T2>
 void map<T1, T2>::insert(std::pair<T1, T2> data) {
     if (_size == maxSize) // do nothing when max size reached
         return;
-    Node<T1, T2>* dummy = nullptr;
-    Node<T1, T2>* node = insert(data, root, dummy);
+    map<T1, T2>::Node* dummy = nullptr;
+    map<T1, T2>::Node* node = insert(data, root, dummy);
     if (node == nullptr)
         return;
     else
@@ -49,7 +49,7 @@ void map<T1, T2>::clear() {
 /* swaps contents of two maps, iterators will refer to elements in the other map */
 template <typename T1, typename T2>
 void map<T1, T2>::swap(map<T1, T2>& rhs) {
-    Node<T1, T2>* rhsRoot = rhs.root;
+    map<T1, T2>::Node* rhsRoot = rhs.root;
     rhs.root = this->root;
     this->root = rhsRoot;
     int rhsS = rhs._size;
@@ -60,7 +60,7 @@ void map<T1, T2>::swap(map<T1, T2>& rhs) {
 /* access operator, if key not found creates a new element with default value */
 template <typename T1, typename T2>
 T2& map<T1, T2>::operator[](const T1& t){
-    Node<T1, T2>* curr = root;
+    map<T1, T2>::Node* curr = root;
     while (curr != nullptr) {
         if (t == curr->data.first)
             return curr->data.second;
@@ -69,7 +69,7 @@ T2& map<T1, T2>::operator[](const T1& t){
         else
             curr = curr->r;
     }
-    Node<T1, T2>* ptr = nullptr; // pointer to element after insertion
+    map<T1, T2>::Node* ptr = nullptr; // pointer to element after insertion
     root = insert(std::pair<T1, T2>(t, T2()), root, ptr);
     _size++;
     return ptr->data.second;
@@ -126,7 +126,7 @@ int const map<T1, T2>::count(const T1& key) {
 /* inserts new element if key is unique, returns pair<iterator, bool> */
 template <typename T1, typename T2>
 std::pair<typename map<T1, T2>::iterator, bool> map<T1, T2>::emplace(T1 key, T2 value) {
-    Node<T1, T2>* ins = nullptr;
+    map<T1, T2>::Node* ins = nullptr;
     insert(std::pair<T1, T2>(key, value), root, ins);
     if (ins == nullptr)
         return std::pair<map<T1, T2>::iterator, bool>(end(), false);
@@ -137,7 +137,7 @@ std::pair<typename map<T1, T2>::iterator, bool> map<T1, T2>::emplace(T1 key, T2 
 /* returns a reference to the value mapped at key, will throw out_of_range if key does not exist */
 template <typename T1, typename T2>
 T2& map<T1, T2>::at(const T1& key) const {
-    Node<T1, T2>* curr = root;
+    map<T1, T2>::Node* curr = root;
     while(curr != nullptr) {
         if (key == curr->data.first) {
             return curr->data.second;
@@ -158,7 +158,7 @@ void map<T1, T2>::erase(map<T1, T2>::iterator itr) {
         return;
     
     // do a normal BST delete
-    Node<T1, T2>* node = itr.nextStack.top(); // store node to delete
+    map<T1, T2>::Node* node = itr.nextStack.top(); // store node to delete
     itr.nextStack.pop();
 
     if (node->l == nullptr && node->r == nullptr) { // case 1: leaf node
@@ -172,8 +172,8 @@ void map<T1, T2>::erase(map<T1, T2>::iterator itr) {
             root = nullptr; // if node has no parent it is the root
     }
     else if (node->r != nullptr && node->l != nullptr) { // case 2: node has two children
-        std::stack<Node<T1, T2>*> st = itr.nextStack; // new stack = itr stack
-        Node<T1, T2>* curr = node;
+        std::stack<map<T1, T2>::Node*> st = itr.nextStack; // new stack = itr stack
+        map<T1, T2>::Node* curr = node;
         st.push(curr);
         curr = curr->l;
         st.push(curr);
@@ -207,8 +207,8 @@ void map<T1, T2>::erase(map<T1, T2>::iterator itr) {
         int bf = height(itr.nextStack.top()->r) - height(itr.nextStack.top()->l); // balance factor
         if (bf == 2) { // positive balance factor 2 requires rotate right
 
-            Node<T1, T2>* t;
-            Node<T1, T2>* prev;
+            map<T1, T2>::Node* t;
+            map<T1, T2>::Node* prev;
 
             if (height(itr.nextStack.top()->r->r) >= height(itr.nextStack.top()->r->l)) { // if right bf >= left bf normal rotate
                 t = R(itr.nextStack.top());
@@ -232,8 +232,8 @@ void map<T1, T2>::erase(map<T1, T2>::iterator itr) {
         }
         else if (bf == -2) { // same logic as right
 
-            Node<T1, T2>* t;
-            Node<T1, T2>* prev;
+            map<T1, T2>::Node* t;
+            map<T1, T2>::Node* prev;
 
             if (height(itr.nextStack.top()->l->l) >= height(itr.nextStack.top()->l->r)) {
                 t = L(itr.nextStack.top());
@@ -270,12 +270,12 @@ void map<T1, T2>::erase(const T1& key) {
 
 /* helper for operator=, copies all elements recursively int linear time*/
 template <typename T1, typename T2>
-Node<T1, T2>* map<T1, T2>::equalHelper(Node<T1, T2>* node) {
+typename map<T1, T2>::Node* map<T1, T2>::equalHelper(map<T1, T2>::Node* node) {
     if (node == nullptr) {
         return nullptr;
     }
 
-    Node<T1, T2>* curr = new Node<T1, T2>(node->data, node->height);
+    map<T1, T2>::Node* curr = new map<T1, T2>::Node(node->data, node->height);
     curr->l = equalHelper(node->l);
     curr->r = equalHelper(node->r);
     return curr;
@@ -283,7 +283,7 @@ Node<T1, T2>* map<T1, T2>::equalHelper(Node<T1, T2>* node) {
 
 /* delete elements recursively */
 template <typename T1, typename T2>
-void map<T1, T2>::clear(Node<T1, T2>* node) {
+void map<T1, T2>::clear(map<T1, T2>::Node* node) {
     if (node == nullptr)
         return;
     else {
@@ -295,16 +295,16 @@ void map<T1, T2>::clear(Node<T1, T2>* node) {
 
 /* main insertion logic, returns the new root node, recalculates height of necessary nodes */
 template <typename T1, typename T2>
-Node<T1, T2>* map<T1, T2>::insert(std::pair<T1, T2> data, Node<T1, T2>* node, Node<T1, T2>*& newNode) {
+typename map<T1, T2>::Node* map<T1, T2>::insert(std::pair<T1, T2> data, map<T1, T2>::Node* node, map<T1, T2>::Node*& newNode) {
     if (node == nullptr) {
-        node = new Node<T1, T2>(data);
+        node = new map<T1, T2>::Node(data);
         newNode = node;
     }
     else if (node->data.first == data.first) {
         return nullptr;
     }
     else if (data.first < node->data.first){
-        Node<T1, T2>* tmp = insert(data, node->l, newNode);
+        map<T1, T2>::Node* tmp = insert(data, node->l, newNode);
         if (tmp == nullptr)
             return nullptr;
         else
@@ -317,7 +317,7 @@ Node<T1, T2>* map<T1, T2>::insert(std::pair<T1, T2> data, Node<T1, T2>* node, No
         }
     }
     else if (data.first > node->data.first){
-        Node<T1, T2>* tmp = insert(data, node->r, newNode);
+        map<T1, T2>::Node* tmp = insert(data, node->r, newNode);
         if (tmp == nullptr)
             return nullptr;
         else
@@ -335,14 +335,14 @@ Node<T1, T2>* map<T1, T2>::insert(std::pair<T1, T2> data, Node<T1, T2>* node, No
 
 /* returns the height of a given node */
 template <typename T1, typename T2>
-int map<T1, T2>::height(Node<T1, T2>* node) const {
+int map<T1, T2>::height(map<T1, T2>::Node* node) const {
     return (node == nullptr) ? -1 : node->height;
 }
 
 /* left rotate the given node */
 template <typename T1, typename T2>
-Node<T1, T2>* map<T1, T2>::L(Node<T1, T2>* node) {
-    Node<T1, T2>* curr = node->l;
+typename map<T1, T2>::Node* map<T1, T2>::L(map<T1, T2>::Node* node) {
+    map<T1, T2>::Node* curr = node->l;
     node->l = curr->r;
     curr->r = node;
     node->height = std::max(height(node->l), height(node->r)) + 1;
@@ -352,15 +352,15 @@ Node<T1, T2>* map<T1, T2>::L(Node<T1, T2>* node) {
 
 /* double rotate left the given node */
 template <typename T1, typename T2>
-Node<T1, T2>* map<T1, T2>::LL(Node<T1, T2>* node) {
+typename map<T1, T2>::Node* map<T1, T2>::LL(map<T1, T2>::Node* node) {
     node->l = R(node->l);
     return L(node);
 }
 
 /* right rotate the given node */
 template <typename T1, typename T2>
-Node<T1, T2>* map<T1, T2>::R(Node<T1, T2>* node) {
-    Node<T1, T2>* curr = node->r;
+typename map<T1, T2>::Node* map<T1, T2>::R(map<T1, T2>::Node* node) {
+    map<T1, T2>::Node* curr = node->r;
     node->r = curr->l;
     curr->l = node;
     node->height = std::max(height(node->l), height(node->r)) + 1;
@@ -370,7 +370,7 @@ Node<T1, T2>* map<T1, T2>::R(Node<T1, T2>* node) {
 
 /* double rotate right the given node */
 template <typename T1, typename T2>
-Node<T1, T2>* map<T1, T2>::RR(Node<T1, T2>* node) {
+typename map<T1, T2>::Node* map<T1, T2>::RR(Node* node) {
     node->r = L(node->r);
     return R(node);
 }

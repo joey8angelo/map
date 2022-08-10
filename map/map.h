@@ -7,30 +7,43 @@
 #include <iostream>
 #include <stack>
 
-template <typename T1, typename T2>
-struct Node{
-    Node(std::pair<T1, T2> d) : data(d), l(nullptr), r(nullptr), height(0) {}
-    Node(std::pair<T1, T2> d, int h) : data(d), l(nullptr), r(nullptr), height(h) {}
-    int height;
-    std::pair<T1, T2> data;
-    Node* l;
-    Node* r;
-};
+// template <typename T1, typename T2>
+// struct Node{
+//     Node(std::pair<T1, T2> d) : data(d), l(nullptr), r(nullptr), height(0) {}
+//     Node(std::pair<T1, T2> d, int h) : data(d), l(nullptr), r(nullptr), height(h) {}
+//     int height;
+//     std::pair<T1, T2> data;
+//     Node* l;
+//     Node* r;
+// };
+
+//struct Node;
 
 template <typename T1, typename T2>
 class map{
+private:
+
+struct Node{
+        Node(std::pair<T1, T2> d) : data(d), l(nullptr), r(nullptr), height(0) {}
+        Node(std::pair<T1, T2> d, int h) : data(d), l(nullptr), r(nullptr), height(h) {}
+        int height;
+        std::pair<T1, T2> data;
+        Node* l;
+        Node* r;
+    };
+    
 public:
     map() : root(nullptr), _size(0), maxSize(1000) {}
-    map(Node<T1, T2>* r, int s): root(r), _size(s) {}
+    map(map<T1, T2>::Node* r, int s): root(r), _size(s) {}
     ~map();
 
     class iterator{
     protected:
-        std::stack<Node<T1, T2>*> nextStack;
+        std::stack<Node*> nextStack;
     public:
-        iterator(Node<T1, T2>*);
+        iterator(map<T1, T2>::Node*);
         iterator() {} // do nothing - keep stack size 0 indicates last value
-        iterator(Node<T1, T2>*, const T1&);
+        iterator(map<T1, T2>::Node*, const T1&);
         T1& first();
         T2& second();
         void operator++();
@@ -41,9 +54,9 @@ public:
 
     class reverse_iterator: public iterator{
     public:
-        reverse_iterator(Node<T1, T2>*);
+        reverse_iterator(map<T1, T2>::Node*);
         reverse_iterator(): iterator::iterator() {}
-        reverse_iterator(Node<T1, T2>* n, const T1& t): iterator::iterator(n, t) {}
+        reverse_iterator(Node* n, const T1& t): iterator::iterator(n, t) {}
         void operator++();
     };  
 
@@ -65,21 +78,23 @@ public:
     T2& at(const T1&) const;
     void erase(map<T1, T2>::iterator);
     void erase(const T1&);
+    friend class iterator;
+    friend class reverse_iterator;
 
 private:
 
-    Node<T1, T2>* equalHelper(Node<T1, T2>*);
-    void clear(Node<T1, T2>*);
-    Node<T1, T2>* insert(std::pair<T1, T2>, Node<T1, T2>*, Node<T1, T2>*&);
-    int height(Node<T1, T2>*) const;
-    Node<T1, T2>* L(Node<T1, T2>*);
-    Node<T1, T2>* LL(Node<T1, T2>*);
-    Node<T1, T2>* R(Node<T1, T2>*);
-    Node<T1, T2>* RR(Node<T1, T2>*);
+    Node* equalHelper(map<T1, T2>::Node*);
+    void clear(map<T1, T2>::Node*);
+    Node* insert(std::pair<T1, T2>, map<T1, T2>::Node*, map<T1, T2>::Node*&);
+    int height(map<T1, T2>::Node*) const;
+    Node* L(map<T1, T2>::Node*);
+    Node* LL(map<T1, T2>::Node*);
+    Node* R(map<T1, T2>::Node*);
+    Node* RR(map<T1, T2>::Node*);
 
     int _size;
     int maxSize;
-    Node<T1, T2>* root;
+    Node* root;
 };
 
 #endif
