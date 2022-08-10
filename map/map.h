@@ -8,11 +8,6 @@
 #include <stack>
 
 template <typename T1, typename T2>
-class iterator;
-template <typename T1, typename T2>
-class reverse_iterator;
-
-template <typename T1, typename T2>
 struct Node{
     Node(std::pair<T1, T2> d) : data(d), l(nullptr), r(nullptr), height(0) {}
     Node(std::pair<T1, T2> d, int h) : data(d), l(nullptr), r(nullptr), height(h) {}
@@ -28,34 +23,60 @@ public:
     map() : root(nullptr), _size(0), maxSize(1000) {}
     map(Node<T1, T2>* r, int s): root(r), _size(s) {}
     ~map();
-    bool empty();
-    int size();
-    int max_size();
+
+    class iterator{
+    protected:
+        std::stack<Node<T1, T2>*> nextStack;
+    public:
+        iterator(Node<T1, T2>*);
+        iterator() {} // do nothing - keep stack size 0 indicates last value
+        iterator(Node<T1, T2>*, const T1&);
+        T1& first();
+        T2& second();
+        void operator++();
+        bool operator==(iterator);
+        bool operator!=(iterator);
+        friend class map<T1, T2>;
+    };
+
+    class reverse_iterator: public iterator{
+    public:
+        reverse_iterator(Node<T1, T2>*);
+        reverse_iterator(): iterator::iterator() {}
+        reverse_iterator(Node<T1, T2>* n, const T1& t): iterator::iterator(n, t) {}
+        void operator++();
+    };  
+
+    bool empty() const;
+    int size() const;
+    int max_size() const;
     void insert(std::pair<T1, T2>);
     void clear();
     void swap(map<T1, T2>&);
     T2& operator[](const T1&);
     map<T1, T2>& operator=(const map<T1, T2>&);
-    iterator<T1, T2> begin();
-    iterator<T1, T2> end();
-    reverse_iterator<T1, T2> rbegin();
-    reverse_iterator<T1, T2> rend();
-    iterator<T1, T2> find(const T1&);
+    iterator begin() const;
+    iterator end() const;
+    reverse_iterator rbegin();
+    reverse_iterator rend();
+    iterator find(const T1&) const;
     int const count(const T1&);
-    std::pair<iterator<T1, T2>, bool> emplace(T1, T2);
-    T2& at(const T1&);
-    void erase(iterator<T1, T2>);
+    std::pair<iterator, bool> emplace(T1, T2);
+    T2& at(const T1&) const;
+    void erase(map<T1, T2>::iterator);
     void erase(const T1&);
 
 private:
+
     Node<T1, T2>* equalHelper(Node<T1, T2>*);
     void clear(Node<T1, T2>*);
     Node<T1, T2>* insert(std::pair<T1, T2>, Node<T1, T2>*, Node<T1, T2>*&);
-    int height(Node<T1, T2>*);
+    int height(Node<T1, T2>*) const;
     Node<T1, T2>* L(Node<T1, T2>*);
     Node<T1, T2>* LL(Node<T1, T2>*);
     Node<T1, T2>* R(Node<T1, T2>*);
     Node<T1, T2>* RR(Node<T1, T2>*);
+
     int _size;
     int maxSize;
     Node<T1, T2>* root;

@@ -26,17 +26,17 @@ int main() {
     else
         cout << "8, 9 emplaced" << endl;
 
-    // test [] operator, find()
+    //test [] operator, find()
     mp1[2];
     mp1.find(2).second() = 3;
     mp1[5] = 20;
     mp1[6] = 7;
 
     // test iterators
-    for (iterator<int, int> b = mp1.begin(); b != mp1.end(); ++b) {
+    for (map<int, int>::iterator b = mp1.begin(); b != mp1.end(); ++b) {
         cout << b.first() << " - " << b.second() << endl;
     }
-    for (reverse_iterator<int, int> b = mp1.rbegin(); b != mp1.rend(); ++b) {
+    for (map<int, int>::reverse_iterator b = mp1.rbegin(); b != mp1.rend(); ++b) {
         cout << b.first() << " - " << b.second() << endl;
     }
     // test clear()
@@ -94,6 +94,7 @@ int main() {
     while (!mp2.empty()) {
         mp2.erase(rand() % 1000);
     }
+    cout << mp2.size() << endl;
 
     return 0;
 }
