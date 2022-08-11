@@ -8,6 +8,11 @@ unordered_map<T1, T2>::Node::~Node() {
 }
 
 template <typename T1, typename T2>
+unordered_map<T1, T2>::~unordered_map() {
+    clear();
+}
+
+template <typename T1, typename T2>
 typename unordered_map<T1, T2>::iterator unordered_map<T1, T2>::insert(std::pair<T1, T2> data) {
     load_factor = ++size / double(vec.size());
     if (load_factor >= max_load_factor)
