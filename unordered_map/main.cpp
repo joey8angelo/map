@@ -10,10 +10,11 @@ int main() {
     
     for (int i = 0;i < 20; i++) {
         mp.insert(std::pair<int, int>(i, 0));
-        cout << i << endl;
     }
 
-    for (unordered_map<int, int>::iterator b = mp.begin(); b != mp.end(); ++b) {
+    unordered_map<int, int> mp2(mp);
+
+    for (unordered_map<int, int>::iterator b = mp2.begin(); b != mp2.end(); ++b) {
         cout << b.first() << " - "<< b.second() << endl;
     }
 

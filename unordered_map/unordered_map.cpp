@@ -8,24 +8,45 @@ unordered_map<T1, T2>::Node::~Node() {
 }
 
 template <typename T1, typename T2>
+unordered_map<T1, T2>::unordered_map(unordered_map<T1, T2>& mp) : vec(mp.vec.size(), nullptr), size(mp.size), load_factor(mp.load_factor), max_load_factor(.75), hasher(std::hash<T1>()){
+    for (int i = 0; i < vec.size(); i++) {
+        if (mp.vec[i] != nullptr) {
+            Node* curr = mp.vec[i];
+            vec[i] = new Node(curr->data);
+            Node* thisCurr = vec[i];
+            while(curr->next != nullptr){
+                thisCurr->next = new Node(curr->next->data);
+                thisCurr = thisCurr->next;
+                curr = curr->next;
+            }
+        }
+    }
+}
+template <typename T1, typename T2>
 unordered_map<T1, T2>::~unordered_map() {
     clear();
 }
 
 template <typename T1, typename T2>
-typename unordered_map<T1, T2>::iterator unordered_map<T1, T2>::insert(std::pair<T1, T2> data) {
+std::pair<typename unordered_map<T1, T2>::iterator, bool> unordered_map<T1, T2>::insert(std::pair<T1, T2> data) {
     load_factor = ++size / double(vec.size());
     if (load_factor >= max_load_factor)
         rehash();
     int v = hasher(data.first);
     v = v % vec.size();
     Node* ins = vec[v];
-    if (ins == nullptr)
+    if (ins == nullptr) {
         vec[v] = new Node(data);
+        return std::pair<iterator, bool>(iterator(this, vec[v], v), true);
+    }
     else {
-        while (ins->next != nullptr)
+        while (ins->next != nullptr) {
+            if (ins->data.first == data.first)
+                return std::pair<iterator, bool>(iterator(this, ins, v), true);
             ins = ins->next;
+        }
         ins->next = new Node(data);
+        return std::pair<iterator, bool>(iterator(this, ins->next, v), true);
     }
 }
 

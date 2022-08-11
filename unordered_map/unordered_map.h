@@ -17,6 +17,7 @@ private:
 
 public:
     unordered_map() : vec(1, nullptr), size(0), load_factor(0), max_load_factor(.75), hasher(std::hash<T1>()){}
+    unordered_map(unordered_map<T1, T2>&);
     ~unordered_map();
 
     class iterator {
@@ -43,7 +44,7 @@ public:
         std::stack<Node*> st;
     };
 
-    iterator insert(std::pair<T1, T2>);
+    std::pair<iterator, bool> insert(std::pair<T1, T2>);
     iterator begin();
     iterator end();
     reverse_iterator rbegin();
