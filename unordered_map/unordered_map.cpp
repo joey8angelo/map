@@ -44,6 +44,7 @@ void unordered_map<T1, T2>::rehash() {
                 curr = curr->next;
             curr->next = new Node(itr.node->data);
         }
+        ++itr;
     }
     clear();
     vec = newVec;
