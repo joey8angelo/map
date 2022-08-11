@@ -17,7 +17,7 @@ private:
 
 public:
     unordered_map() : vec(1, nullptr), size(0), load_factor(0), max_load_factor(.75), hasher(std::hash<T1>()){}
-    ~unordered_map() {}
+    ~unordered_map();
 
     class iterator {
     public:
