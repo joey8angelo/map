@@ -7,10 +7,14 @@ using std::endl;
 
 int main() {
     unordered_map<int, int> mp;
-    mp.insert(std::pair<int, int>(1, 2));
+    
+    for (int i = 0;i < 20; i++) {
+        mp.insert(std::pair<int, int>(i, 0));
+        cout << i << endl;
+    }
 
     for (unordered_map<int, int>::iterator b = mp.begin(); b != mp.end(); ++b) {
-        cout << b.first() << b.second() << endl;
+        cout << b.first() << " - "<< b.second() << endl;
     }
 
     return 0;

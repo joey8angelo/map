@@ -1,7 +1,8 @@
 #include "unordered_map.h"
 template <typename T1, typename T2>
 unordered_map<T1, T2>::iterator::iterator(unordered_map<T1, T2>* m, unordered_map<T1, T2>::Node* n, int b) : bucket(b), node(n), map(m) {
-    ++(*this);
+    if (map->vec[0] == nullptr)
+        ++(*this);
 }
 
 template <typename T1, typename T2>
