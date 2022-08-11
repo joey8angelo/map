@@ -7,18 +7,6 @@
 #include <iostream>
 #include <stack>
 
-// template <typename T1, typename T2>
-// struct Node{
-//     Node(std::pair<T1, T2> d) : data(d), l(nullptr), r(nullptr), height(0) {}
-//     Node(std::pair<T1, T2> d, int h) : data(d), l(nullptr), r(nullptr), height(h) {}
-//     int height;
-//     std::pair<T1, T2> data;
-//     Node* l;
-//     Node* r;
-// };
-
-//struct Node;
-
 template <typename T1, typename T2>
 class map{
 private:
