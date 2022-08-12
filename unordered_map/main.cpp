@@ -14,8 +14,15 @@ int main() {
 
     unordered_map<int, int> mp2(mp);
 
-    for (unordered_map<int, int>::iterator b = mp2.begin(); b != mp2.end(); ++b) {
-        cout << b.first() << " - "<< b.second() << endl;
+    for (unordered_map<int, int>::iterator i = mp2.begin(); i != mp2.end(); ++i) {
+        cout << i.first() << " - "<< i.second() << endl;
+    }
+
+    for (int i = 0; i < mp2.bucket_count(); i++) {
+        cout << "bucket #" << i << " contains: ";
+        for (unordered_map<int, int>::local_iterator j = mp2.begin(i); j != mp2.end(i); ++j) {
+            cout << j.first() << " " << j.second() << endl;
+        }
     }
 
     return 0;

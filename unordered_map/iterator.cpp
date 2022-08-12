@@ -1,20 +1,24 @@
 #include "unordered_map.h"
-template <typename T1, typename T2>
-unordered_map<T1, T2>::iterator::iterator(unordered_map<T1, T2>* m, unordered_map<T1, T2>::Node* n, int b) : bucket(b), node(n), map(m) {
-    if (map->vec[0] == nullptr)
-        ++(*this);
-}
 
+/* return reference to first value iterator refers to */
 template <typename T1, typename T2>
 T1& unordered_map<T1, T2>::iterator::first() {
-    return node->data.first;
+    if (node == nullptr)
+        return defaultFirst;
+    else
+        return node->data.first;
 }
 
+/* return reference to second value iterator refers to */
 template <typename T1, typename T2>
 T2& unordered_map<T1, T2>::iterator::second() {
-    return node->data.second;
+    if (node == nullptr)
+        return defaultSecond;
+    else
+        return node->data.second;
 }
 
+/* iterates to next element in map */
 template <typename T1, typename T2>
 void unordered_map<T1, T2>::iterator::operator++() {
     
@@ -43,6 +47,7 @@ void unordered_map<T1, T2>::iterator::operator++() {
         node = node->next;
 }
 
+/* return true if iterators are equal to each other */
 template <typename T1, typename T2>
 bool unordered_map<T1, T2>::iterator::operator==(iterator rhs) {
     if (node == rhs.node && bucket == rhs.bucket && map == rhs.map)
@@ -51,37 +56,37 @@ bool unordered_map<T1, T2>::iterator::operator==(iterator rhs) {
         return false;
 }
 
+/* return true if iterators are not equal to each other */
 template <typename T1, typename T2>
 bool unordered_map<T1, T2>::iterator::operator!=(iterator rhs) {
     return !operator==(rhs);
 }
 
+/* iterates to next element in the bucket */
 template <typename T1, typename T2>
-void unordered_map<T1, T2>::reverse_iterator::operator++(){
-    st.pop();
-    if(st.empty()) {
-        if (--iterator::bucket <= 0) {
-            iterator::node = nullptr;
-            iterator::bucket = -1;
-            return;
-        }
-        iterator::node = vec[iterator::bucket];
-        if (iterator::node == nullptr){
-            while (iterator::node == nullptr) {
-                if(iterator::bucket <= 0) {
-                    iterator::bucket = -1;
-                    return;
-                }
-                iterator::node = vec[iterator::bucket--];
-            }
-            return;
-        }
-        while(iterator::node->next != nullptr) {
-            st.push(iterator::node);
-            iterator::node = iterator::node->next;
-        }
-        iterator::node = st.top();
+void unordered_map<T1, T2>::local_iterator::operator++() {
+    if (iterator::node->next == nullptr || iterator::node == nullptr) {
+        pos = -1;
+        iterator::node = nullptr;
+        return;
     }
+    else {
+        iterator::node = iterator::node->next;
+        pos += 1;
+    }
+}
+
+/* return true if local_iterators are equal to each other */
+template <typename T1, typename T2>
+bool unordered_map<T1, T2>::local_iterator::operator==(local_iterator rhs) {
+    if (iterator::node == rhs.node && iterator::bucket == rhs.bucket && iterator::map == rhs.map && pos == rhs.pos)
+        return true;
     else
-        iterator::node = st.top();
+        return false;
+}
+
+/* return true if local_iterators are not equal to each other */
+template <typename T1, typename T2>
+bool unordered_map<T1, T2>::local_iterator::operator!=(local_iterator rhs) {
+    return !operator==(rhs);
 }

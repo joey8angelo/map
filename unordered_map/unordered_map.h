@@ -10,7 +10,6 @@ class unordered_map {
 private:
     struct Node {
         Node(std::pair<T1, T2> d) : data(d), next(nullptr) {}
-        ~Node();
         std::pair<T1, T2> data;
         Node* next;
     };
@@ -22,8 +21,8 @@ public:
 
     class iterator {
     public:
-        iterator(unordered_map<T1, T2>* m) : bucket(-1), node(nullptr), map(m) {}
-        iterator(unordered_map<T1, T2>*, unordered_map<T1, T2>::Node*, int);
+        iterator(unordered_map<T1, T2>* m) : bucket(-1), node(nullptr), map(m), defaultFirst(T1()), defaultSecond(T2()) {}
+        iterator(unordered_map<T1, T2>* m, unordered_map<T1, T2>::Node* n, int b) : bucket(b), node(n), map(m), defaultFirst(T1()), defaultSecond(T2()) {}
         T1& first();
         T2& second();
         void operator++();
@@ -34,24 +33,28 @@ public:
         Node* node;
         int bucket;
         unordered_map<T1, T2>* map;
+        T1 defaultFirst;
+        T2 defaultSecond;
     };
-    class reverse_iterator : public iterator {
+    class local_iterator: public iterator {
     public:
-        reverse_iterator() : iterator::iterator() {}
-        reverse_iterator(unordered_map<T1, T2>::Node* n, int b) : iterator::iterator(n, b) {}
+        local_iterator(unordered_map<T1,T2>* m, unordered_map<T1, T2>::Node* n, int b, int p = 0) : iterator::iterator(m, n, b), pos(p) {}
         void operator++();
-    private:
-        std::stack<Node*> st;
+        bool operator==(local_iterator);
+        bool operator!=(local_iterator);
+    protected:
+        int pos;
     };
 
-    std::pair<iterator, bool> insert(std::pair<T1, T2>);
+    std::pair<iterator, bool> insert(const std::pair<T1, T2>&);
     iterator begin();
+    local_iterator begin(int);
     iterator end();
-    reverse_iterator rbegin();
-    reverse_iterator rend();
+    local_iterator end(int);
     void clear();
+    int bucket(const T1&);
+    int bucket_count();
     friend class iterator;
-    friend class reverse_iterator;
 
 private:
     void rehash();

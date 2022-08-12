@@ -1,12 +1,6 @@
 #include "unordered_map.h"
 
-template <typename T1, typename T2>
-unordered_map<T1, T2>::Node::~Node() {
-    if (this->next != nullptr) {
-        delete this->next;
-    }
-}
-
+/* copy constructor */
 template <typename T1, typename T2>
 unordered_map<T1, T2>::unordered_map(unordered_map<T1, T2>& mp) : vec(mp.vec.size(), nullptr), size(mp.size), load_factor(mp.load_factor), max_load_factor(.75), hasher(std::hash<T1>()){
     for (int i = 0; i < vec.size(); i++) {
@@ -22,13 +16,16 @@ unordered_map<T1, T2>::unordered_map(unordered_map<T1, T2>& mp) : vec(mp.vec.siz
         }
     }
 }
+
+/* destructor */
 template <typename T1, typename T2>
 unordered_map<T1, T2>::~unordered_map() {
     clear();
 }
 
+/* inserts a new element if the key does not exist already */
 template <typename T1, typename T2>
-std::pair<typename unordered_map<T1, T2>::iterator, bool> unordered_map<T1, T2>::insert(std::pair<T1, T2> data) {
+std::pair<typename unordered_map<T1, T2>::iterator, bool> unordered_map<T1, T2>::insert(const std::pair<T1, T2>& data) {
     load_factor = ++size / double(vec.size());
     if (load_factor >= max_load_factor)
         rehash();
@@ -50,6 +47,7 @@ std::pair<typename unordered_map<T1, T2>::iterator, bool> unordered_map<T1, T2>:
     }
 }
 
+/* rehash a new vector of size nextPrime(vec.size() * 2) */
 template <typename T1, typename T2>
 void unordered_map<T1, T2>::rehash() {
     int newBuckets = nextPrime(vec.size() * 2);
@@ -71,14 +69,24 @@ void unordered_map<T1, T2>::rehash() {
     vec = newVec;
 }
 
+/* deletes all elements in the vector */
 template <typename T1, typename T2>
 void unordered_map<T1, T2>::clear() {
     for(int i = 0; i < vec.size(); i++) {
-        if (vec[i] != nullptr)
-            delete vec[i];
+        if (vec[i] != nullptr){
+            Node* curr = vec[i];
+            Node* next = curr->next;
+            while (curr->next != nullptr) {
+                delete curr;
+                curr = next;
+                next = next->next;
+            }
+            delete curr;
+        }
     }
 }
 
+/* find the nearest prime after n */
 template <typename T1, typename T2>
 int unordered_map<T1, T2>::nextPrime(int n) {
     if (n % 2 == 0) {
@@ -89,6 +97,7 @@ int unordered_map<T1, T2>::nextPrime(int n) {
     return n;
 }
 
+/* primality test */
 template <typename T1, typename T2>
 bool unordered_map<T1, T2>::isPrime(int n) {
     for (int i = 2; i * i <= n; i++) {
@@ -98,22 +107,38 @@ bool unordered_map<T1, T2>::isPrime(int n) {
     return true;
 }
 
+/* return an iterator to the first element in the vector */
 template <typename T1, typename T2>
 typename unordered_map<T1, T2>::iterator unordered_map<T1, T2>::begin() {
-    return unordered_map<T1, T2>::iterator(this, vec[0], 0);
+    Node* curr = vec[0];
+    int i = 0;
+    while (curr == nullptr && ++i < vec.size())
+        curr = vec[i];
+    if (curr == nullptr)
+        i = -1;
+    return unordered_map<T1, T2>::iterator(this, curr, i);
 }
 
+/* return a local_iterator to the element at bucket b */
+template <typename T1, typename T2>
+typename unordered_map<T1, T2>::local_iterator unordered_map<T1, T2>::begin(int b) {
+    return unordered_map<T1, T2>::local_iterator(this, vec[b], b);
+}
+
+/* return iterator to past-the-end element */
 template <typename T1, typename T2>
 typename unordered_map<T1, T2>::iterator unordered_map<T1, T2>::end() {
     return unordered_map<T1, T2>::iterator(this);
 }
 
+/*return local_iterator to past-the-end element */
 template <typename T1, typename T2>
-typename unordered_map<T1, T2>::reverse_iterator unordered_map<T1, T2>::rbegin() {
-    return unordered_map<T1, T2>::reverse_iterator(this, vec[vec.size() - 1], vec.size());
+typename unordered_map<T1, T2>::local_iterator unordered_map<T1, T2>::end(int b) {
+    return unordered_map<T1, T2>::local_iterator(this, nullptr, b, -1);
 }
 
+/* return the amount of buckets in the map */
 template <typename T1, typename T2>
-typename unordered_map<T1, T2>::reverse_iterator unordered_map<T1, T2>::rend() {
-    return unordered_map<T1, T2>::reverse_iterator(this);
+int unordered_map<T1, T2>::bucket_count() {
+    return vec.size();
 }
