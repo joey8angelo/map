@@ -220,3 +220,34 @@ template <typename T1, typename T2>
 bool unordered_map<T1, T2>::empty() {
     return !size;
 }
+
+/* remove an element from the map */
+template <typename T1, typename T2>
+void unordered_map<T1, T2>::erase(iterator itr) {
+    if (itr == end()) { // do nothing if iterator is end()
+        return;
+    }
+    Node* curr = vec[itr.bucket]; // store value at first position in the bucket
+    if (curr->next == nullptr) { // no other elements delete node
+        vec[itr.bucket] = nullptr;
+        delete itr.node;
+    }
+    else {
+        if (curr == itr.node) { // if node to delete is the first node make vec point to next node
+            vec[itr.bucket] = curr->next;
+            delete itr.node;
+            return;
+        }
+        while (curr->next != itr.node) { // iterate until node to delete found
+            curr = curr->next;
+        }
+        curr->next = itr.node->next; // parent node points to node to delete next value
+        delete itr.node;
+    }
+}
+
+/* remove an element from the map */
+template <typename T1, typename T2>
+void unordered_map<T1, T2>::erase(T1& key) {
+    erase(find(key));
+}

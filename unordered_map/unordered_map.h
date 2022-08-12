@@ -60,6 +60,8 @@ public:
     int max_bucket_count();
     int max_size();
     bool empty();
+    void erase(iterator);
+    void erase(T1&);
     friend class iterator;
 
 private:
