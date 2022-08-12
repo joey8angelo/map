@@ -214,3 +214,9 @@ template <typename T1, typename T2>
 int unordered_map<T1, T2>::max_size() {
     return _max_bucket_count;
 }
+
+/* return true if the map is empty */
+template <typename T1, typename T2>
+bool unordered_map<T1, T2>::empty() {
+    return !size;
+}

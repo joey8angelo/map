@@ -59,6 +59,7 @@ public:
     int max_load_factor();
     int max_bucket_count();
     int max_size();
+    bool empty();
     friend class iterator;
 
 private:
