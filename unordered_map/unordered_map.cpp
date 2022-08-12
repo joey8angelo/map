@@ -90,6 +90,7 @@ void unordered_map<T1, T2>::clear() {
             }
             delete curr;
         }
+        vec[i] = nullptr;
     }
 }
 
@@ -250,4 +251,11 @@ void unordered_map<T1, T2>::erase(iterator itr) {
 template <typename T1, typename T2>
 void unordered_map<T1, T2>::erase(T1& key) {
     erase(find(key));
+}
+
+/* if key exists in map returns a reference to its mapped value, if not inserts a new item with key and default value */
+template <typename T1, typename T2>
+T2& unordered_map<T1, T2>::operator[](const T1& key){
+    std::pair<iterator, bool> a = insert(std::pair<T1, T2>(key, T2()));
+    return a.first.second();
 }

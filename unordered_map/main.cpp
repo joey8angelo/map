@@ -15,6 +15,14 @@ int main() {
     }
 
     unordered_map<string, string> mp2(mp);
+    mp.clear();
+    mp["one"] = "two";
+    mp["two"];
+    mp["two"] = "three";
+
+    for (unordered_map<string, string>::iterator i = mp.begin(); i != mp.end(); ++i) {
+        cout << i.first() << " - "<< i.second() << endl;
+    }
 
     for (unordered_map<string, string>::iterator i = mp2.begin(); i != mp2.end(); ++i) {
         cout << i.first() << " - "<< i.second() << endl;

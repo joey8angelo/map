@@ -46,6 +46,7 @@ public:
     };
 
     std::pair<iterator, bool> insert(const std::pair<T1, T2>&);
+    T2& operator[](const T1&);
     iterator begin();
     local_iterator begin(int);
     iterator end();
