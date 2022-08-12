@@ -15,14 +15,13 @@ private:
     };
 
 public:
-    unordered_map() : vec(1, nullptr), size(0), load_factor(0), max_load_factor(.75), hasher(std::hash<T1>()){}
+    unordered_map() : _max_bucket_count(357913941), vec(1, nullptr), size(0), load_factor(0), _max_load_factor(.75), hasher(std::hash<T1>()){}
     unordered_map(unordered_map<T1, T2>&);
     ~unordered_map();
 
     class iterator {
     public:
-        iterator(unordered_map<T1, T2>* m) : bucket(-1), node(nullptr), map(m), defaultFirst(T1()), defaultSecond(T2()) {}
-        iterator(unordered_map<T1, T2>* m, unordered_map<T1, T2>::Node* n, int b) : bucket(b), node(n), map(m), defaultFirst(T1()), defaultSecond(T2()) {}
+        iterator(unordered_map<T1, T2>* m, unordered_map<T1, T2>::Node* n = nullptr, int b = -1) : bucket(b), node(n), map(m), defaultFirst(T1()), defaultSecond(T2()) {}
         T1& first();
         T2& second();
         void operator++();
@@ -38,7 +37,7 @@ public:
     };
     class local_iterator: public iterator {
     public:
-        local_iterator(unordered_map<T1,T2>* m, unordered_map<T1, T2>::Node* n, int b, int p = 0) : iterator::iterator(m, n, b), pos(p) {}
+        local_iterator(unordered_map<T1,T2>* m, unordered_map<T1, T2>::Node* n, int b, int p) : iterator::iterator(m, n, b), pos(p) {}
         void operator++();
         bool operator==(local_iterator);
         bool operator!=(local_iterator);
@@ -52,8 +51,14 @@ public:
     iterator end();
     local_iterator end(int);
     void clear();
-    int bucket(const T1&);
-    int bucket_count();
+    int bucket(const T1&) const;
+    int bucket_count() const;
+    int bucket_size(int) const;
+    int count(const T1&) const;
+    iterator find(const T1&);
+    int max_load_factor();
+    int max_bucket_count();
+    int max_size();
     friend class iterator;
 
 private:
@@ -63,7 +68,8 @@ private:
     std::vector<Node*> vec;
     int size;
     double load_factor;
-    double max_load_factor;
+    double _max_load_factor;
+    int _max_bucket_count;
     const std::hash<T1> hasher;
 };
 
