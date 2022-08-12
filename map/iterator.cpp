@@ -2,7 +2,7 @@
 
 /* constructor */
 template <typename T1, typename T2>
-map<T1, T2>::iterator::iterator(map<T1, T2>::Node* root) {
+map<T1, T2>::iterator::iterator(map<T1, T2>::Node* root) : defaultFirst(T1()), defaultSecond(T2()) {
     if(root == nullptr)
         return;
     map<T1, T2>::Node* curr = root;
@@ -14,7 +14,7 @@ map<T1, T2>::iterator::iterator(map<T1, T2>::Node* root) {
 
 /* constructor for iterator to find an internal node, iterator will be a past-the-end iterator if key not found */
 template <typename T1, typename T2>
-map<T1, T2>::iterator::iterator(map<T1, T2>::Node* root, const T1& key) {
+map<T1, T2>::iterator::iterator(map<T1, T2>::Node* root, const T1& key) : defaultFirst(T1()), defaultSecond(T2()) {
     if(root == nullptr)
         return;
     map<T1, T2>::Node* curr = root;
@@ -35,13 +35,19 @@ map<T1, T2>::iterator::iterator(map<T1, T2>::Node* root, const T1& key) {
 /* returns the key that the iterator is referring to */
 template <typename T1, typename T2>
 T1& map<T1, T2>::iterator::first() {
-    return nextStack.top()->data.first;
+    if (nextStack.empty())
+        return defaultFirst;
+    else
+        return nextStack.top()->data.first;
 }
 
 /* returns the value that the iterator is referring to */
 template <typename T1, typename T2>
 T2& map<T1, T2>::iterator::second() {
-    return nextStack.top()->data.second;
+    if (nextStack.empty())
+        return defaultSecond;
+    else
+        return nextStack.top()->data.second;
 }
 
 /* increments iterator to the next inOrder value */

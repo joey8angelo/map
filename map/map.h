@@ -28,9 +28,11 @@ public:
     class iterator{
     protected:
         std::stack<Node*> nextStack;
+        T1 defaultFirst;
+        T2 defaultSecond;
     public:
         iterator(map<T1, T2>::Node*);
-        iterator() {} // do nothing - keep stack size 0 indicates last value
+        iterator() : defaultFirst(T1()), defaultSecond(T2()) {}
         iterator(map<T1, T2>::Node*, const T1&);
         T1& first();
         T2& second();

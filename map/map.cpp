@@ -89,8 +89,7 @@ typename map<T1, T2>::iterator map<T1, T2>::begin() const {
     return map<T1, T2>::iterator(root);
 }
 
-/* returns iterator referring to the past-the-end element in map 
-   unlike std::map the end iterator cannot be accessed and will cause a seg fault */
+/* returns iterator referring to the past-the-end element in map */
 template <typename T1, typename T2>
 typename map<T1, T2>::iterator map<T1, T2>::end() const {
     return map<T1, T2>::iterator();
@@ -102,8 +101,7 @@ typename map<T1, T2>::reverse_iterator map<T1, T2>::rbegin() {
     return reverse_iterator(root);
 }
 
-/* returns reverse_iterator referring to the past-the-end element in map 
-   unlike std::map the end iterator cannot be accessed and will cause a seg fault */
+/* returns reverse_iterator referring to the past-the-end element in map */
 template <typename T1, typename T2>
 typename map<T1, T2>::reverse_iterator map<T1, T2>::rend() {
     return reverse_iterator();
