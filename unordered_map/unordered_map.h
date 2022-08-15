@@ -47,6 +47,7 @@ public:
 
     std::pair<iterator, bool> insert(const std::pair<T1, T2>&);
     T2& operator[](const T1&);
+    unordered_map& operator=(const unordered_map&);
     iterator begin();
     local_iterator begin(int);
     iterator end();
@@ -68,14 +69,15 @@ public:
     friend class iterator;
 
 private:
+    void remove_all();
     void rehash();
     int nextPrime(int);
     bool isPrime(int);
     std::vector<Node*> vec;
     int size;
     double load_factor;
-    double _max_load_factor;
-    int _max_bucket_count;
+    const double _max_load_factor;
+    const int _max_bucket_count;
     const std::hash<T1> hasher;
 };
 

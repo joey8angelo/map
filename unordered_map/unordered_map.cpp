@@ -72,13 +72,13 @@ void unordered_map<T1, T2>::rehash() {
         }
         ++itr;
     }
-    clear();
+    remove_all();
     vec = newVec;
 }
 
-/* deletes all elements in the vector */
+/* deletes all elements in the vector without changing its size, load_factor, etc */
 template <typename T1, typename T2>
-void unordered_map<T1, T2>::clear() {
+void unordered_map<T1, T2>::remove_all() {
     for(int i = 0; i < vec.size(); i++) {
         if (vec[i] != nullptr){
             Node* curr = vec[i];
@@ -92,6 +92,14 @@ void unordered_map<T1, T2>::clear() {
         }
         vec[i] = nullptr;
     }
+}
+
+/* deletes all elements in the vector */
+template <typename T1, typename T2>
+void unordered_map<T1, T2>::clear() {
+    remove_all();
+    size = 0; 
+    load_factor = 0;
 }
 
 /* find the nearest prime after n */
@@ -184,18 +192,21 @@ int unordered_map<T1, T2>::count(const T1& key) const{
 /* return iterator to element with key */
 template <typename T1, typename T2>
 typename unordered_map<T1, T2>::iterator unordered_map<T1, T2>::find(const T1& key) {
-    std::size_t hs = hasher(key);
-    hs = hs % bucket_count();
+    std::size_t hs = hasher(key) % bucket_count();
     Node* curr = vec[hs];
-    int i = 0;
     while (curr != nullptr) {
         if (curr->data.first == key) {
-            return iterator(this, curr, i);
+            return iterator(this, curr, hs);
         }
-        i++;
         curr = curr->next;
     }
     return iterator(this);
+}
+
+/* return the bucket number of a key */
+template <typename T1, typename T2>
+int unordered_map<T1, T2>::bucket(const T1& key) const {
+    return hasher(key) % bucket_count();
 }
 
 /* return max_bucket_count */
@@ -245,6 +256,8 @@ void unordered_map<T1, T2>::erase(iterator itr) {
         curr->next = itr.node->next; // parent node points to node to delete next value
         delete itr.node;
     }
+    size--;
+    load_factor = size / (double)bucket_count();
 }
 
 /* remove an element from the map */
@@ -271,10 +284,33 @@ T2& unordered_map<T1, T2>::at(const T1& key) const {
         else
             node = node->next;
     }
-    throw std::out_of_range("map::at");
+    throw std::out_of_range("unordered_map::at");
 }
 
+/* inserts new element if the key is unique similar to insert function */
 template <typename T1, typename T2>
 std::pair<typename unordered_map<T1, T2>::iterator, bool> unordered_map<T1, T2>::emplace(T1 key, T2 value) {
     return insert(std::pair<T1, T2>(key, value));
+}
+
+/* make map lhs equal to the values of map rhs */
+template <typename T1, typename T2>
+unordered_map<T1, T2>& unordered_map<T1, T2>::operator=(const unordered_map<T1, T2>& rhs) {
+    remove_all();
+    vec = std::vector<Node*>(rhs->vec.size(), nullptr);
+    for (int i = 0; i < vec.size(); i++) {
+        if (rhs->vec[i] != nullptr) {
+            Node* curr = rhs->vec[i];
+            vec[i] = new Node(curr->data);
+            Node* thisCurr = vec[i];
+            while(curr->next != nullptr){
+                thisCurr->next = new Node(curr->next->data);
+                thisCurr = thisCurr->next;
+                curr = curr->next;
+            }
+        }
+    }
+    size = rhs->size;
+    load_factor = rhs.load_factor;
+    return this;
 }

@@ -8,35 +8,46 @@ using std::endl;
 using std::string;
 
 int main() {
-    unordered_map<string, string> mp;
-    
-    for (int i = 0;i < 20; i++) {
-        mp.insert(std::pair<string, string>(std::to_string(i), "Hello"));
-    }
 
-    unordered_map<string, string> mp2(mp);
-    mp.clear();
-    mp["one"] = "two";
-    mp["two"];
-    mp["two"] = "three";
+    {
+        unordered_map<string, int> mp;
+        mp["Mercury"] = 89;
+        mp["Venus"] = 226;
+        mp["Earth"] = 366;
+        mp["Mars"] = 688;
+        mp["Jupiter"] = 4334;
+        mp["Saturn"] = 10760;
+        mp["Uranus"] = 30688;
 
-    for (unordered_map<string, string>::iterator i = mp.begin(); i != mp.end(); ++i) {
-        cout << i.first() << " - "<< i.second() << endl;
-    }
+        unordered_map<string, int> mp2(mp);
+        mp.clear();
 
-    for (unordered_map<string, string>::iterator i = mp2.begin(); i != mp2.end(); ++i) {
-        cout << i.first() << " - "<< i.second() << endl;
-    }
+        mp2.emplace("Neptune", 60191);
 
-    mp2.find("5").second() = "Hello #5";
-
-    for (int i = 0; i < mp2.bucket_count(); i++) {
-        cout << "bucket #" << i << " contains: ";
-        for (unordered_map<string, string>::local_iterator j = mp2.begin(i); j != mp2.end(i); ++j) {
-            cout << j.first() << "-" << j.second() << ", ";
+        for (unordered_map<string, int>::iterator i = mp2.begin(); i != mp2.end(); ++i) {
+            i.second() -= 1;
+            cout << i.first() << ": " << i.second() << endl;
         }
-        cout << endl;
     }
+    {
+        unordered_map<string, string> mp;
+        for (int i = 0; i < 50; i++) {
+            mp[std::to_string(i)] = std::to_string(i);
+        }
 
+        mp.find("30").second() = "value at key \"30\" is this string";
+        mp.erase(mp.find("30"));
+        cout << "30 would have been in bucket #" << mp.bucket("30") << endl;
+
+        for (int i = 0; i < mp.bucket_count(); i++) {
+            cout << "bucket #" << i << ": ";
+            for (unordered_map<string, string>::local_iterator l = mp.begin(i); l != mp.end(i); ++l) {
+                cout << l.second() << ", ";
+            }
+            cout << endl;
+        }
+
+        cout << "key \"41\" - " << mp.at("41") << endl;
+    }
     return 0;
 }
