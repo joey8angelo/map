@@ -63,6 +63,8 @@ public:
     bool empty();
     void erase(iterator);
     void erase(T1&);
+    T2& at(const T1&) const;
+    std::pair<iterator, bool> emplace(T1, T2);
     friend class iterator;
 
 private:

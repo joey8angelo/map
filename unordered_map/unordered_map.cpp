@@ -259,3 +259,22 @@ T2& unordered_map<T1, T2>::operator[](const T1& key){
     std::pair<iterator, bool> a = insert(std::pair<T1, T2>(key, T2()));
     return a.first.second();
 }
+
+/* returns a reference to the value mapped at key, will throw out_of_range if key does not exist */
+template <typename T1, typename T2>
+T2& unordered_map<T1, T2>::at(const T1& key) const {
+    std::size_t hs = hasher(key) % bucket_count();
+    Node* node = vec[hs];
+    while (node != nullptr) {
+        if (key == node->data.first)
+            return node->data.second;
+        else
+            node = node->next;
+    }
+    throw std::out_of_range("map::at");
+}
+
+template <typename T1, typename T2>
+std::pair<typename unordered_map<T1, T2>::iterator, bool> unordered_map<T1, T2>::emplace(T1 key, T2 value) {
+    return insert(std::pair<T1, T2>(key, value));
+}
