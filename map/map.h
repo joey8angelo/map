@@ -63,9 +63,9 @@ public:
     reverse_iterator rbegin();
     reverse_iterator rend();
     iterator find(const T1&) const;
-    int const count(const T1&);
+    int count(const T1&) const;
     std::pair<iterator, bool> emplace(T1, T2);
-    T2& at(const T1&) const;
+    T2& at(const T1&);
     void erase(map<T1, T2>::iterator);
     void erase(const T1&);
     friend class iterator;

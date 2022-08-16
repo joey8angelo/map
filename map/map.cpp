@@ -117,7 +117,7 @@ typename map<T1, T2>::iterator map<T1, T2>::find(const T1& key) const{
 /* counts elements with specific key
    map can only have one instance of a specific key so return will be 0 or 1 */
 template <typename T1, typename T2>
-int const map<T1, T2>::count(const T1& key) {
+int map<T1, T2>::count(const T1& key) const {
     return find(key) != end() ? 1 : 0;
 }
 
@@ -125,16 +125,21 @@ int const map<T1, T2>::count(const T1& key) {
 template <typename T1, typename T2>
 std::pair<typename map<T1, T2>::iterator, bool> map<T1, T2>::emplace(T1 key, T2 value) {
     map<T1, T2>::Node* ins = nullptr;
-    insert(std::pair<T1, T2>(key, value), root, ins);
+    Node* n = insert(std::pair<T1, T2>(key, value), root, ins);
+    if (n != nullptr)
+        root = n;
+    
     if (ins == nullptr)
         return std::pair<map<T1, T2>::iterator, bool>(end(), false);
-    else
+    else {
+        _size++;
         return std::pair<map<T1, T2>::iterator, bool>(find(key), true);
+    }
 }
 
 /* returns a reference to the value mapped at key, will throw out_of_range if key does not exist */
 template <typename T1, typename T2>
-T2& map<T1, T2>::at(const T1& key) const {
+T2& map<T1, T2>::at(const T1& key) {
     map<T1, T2>::Node* curr = root;
     while(curr != nullptr) {
         if (key == curr->data.first) {
