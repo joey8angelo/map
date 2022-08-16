@@ -67,7 +67,7 @@ public:
     std::pair<iterator, bool> emplace(T1, T2);
     T2& at(const T1&);
     void erase(map<T1, T2>::iterator);
-    void erase(const T1&);
+    void erase(const T1);
     friend class iterator;
     friend class reverse_iterator;
 

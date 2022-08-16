@@ -4,8 +4,29 @@
 
 using std::cout;
 using std::endl;
+using std::string;
 
 int main() {
+
+map<string, int> mp, mp2;
+
+mp["dog"] = 1;
+mp["cat"] = 2;
+
+mp2["tiger"] = 10;
+
+mp2.swap(mp);
+
+cout << "mp" << endl;
+for (map<string, int>::iterator i = mp.begin(); i != mp.end(); ++i) {
+	cout << i.first() << " - " << i.second() << endl;
+}
+
+cout << "mp2" << endl;
+for (map<string, int>::iterator i = mp2.begin(); i != mp2.end(); ++i) {
+	cout << i.first() << " - " << i.second() << endl;
+}
+    /*
     map<int, int> mp1, mp2;
 
     // test insert
@@ -95,6 +116,8 @@ int main() {
         mp2.erase(rand() % 1000);
     }
     cout << mp2.size() << endl;
+
+    */
 
     return 0;
 }

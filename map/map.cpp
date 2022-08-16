@@ -267,7 +267,7 @@ void map<T1, T2>::erase(map<T1, T2>::iterator itr) {
 
 /* erase a key value pair from the map with a key, invalidates all iterators */
 template <typename T1, typename T2>
-void map<T1, T2>::erase(const T1& key) {
+void map<T1, T2>::erase(const T1 key) {
     erase(find(key));
 }
 
