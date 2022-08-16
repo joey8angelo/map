@@ -15,7 +15,7 @@ private:
     };
 
 public:
-    unordered_map() : _max_bucket_count(357913941), vec(1, nullptr), size(0), load_factor(0), _max_load_factor(.75), hasher(std::hash<T1>()){}
+    unordered_map() : _max_bucket_count(357913941), vec(1, nullptr), _size(0), _load_factor(0), _max_load_factor(.75), hasher(std::hash<T1>()){}
     unordered_map(unordered_map<T1, T2>&);
     ~unordered_map();
 
@@ -58,25 +58,29 @@ public:
     int bucket_size(int) const;
     int count(const T1&) const;
     iterator find(const T1&);
-    int max_load_factor();
+    double max_load_factor() const;
+    void max_load_factor(double z);
     int max_bucket_count();
     int max_size();
+    int size() const;
     bool empty();
     void erase(iterator);
-    void erase(T1&);
-    T2& at(const T1&) const;
+    void erase(T1);
+    T2& at(const T1&);
     std::pair<iterator, bool> emplace(T1, T2);
+    double load_factor() const;
+    void rehash(int);
+    void swap(unordered_map&);
     friend class iterator;
 
 private:
     void remove_all();
-    void rehash();
     int nextPrime(int);
     bool isPrime(int);
     std::vector<Node*> vec;
-    int size;
-    double load_factor;
-    const double _max_load_factor;
+    int _size;
+    double _load_factor;
+    double _max_load_factor;
     const int _max_bucket_count;
     const std::hash<T1> hasher;
 };

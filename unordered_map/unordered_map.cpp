@@ -2,7 +2,7 @@
 
 /* copy constructor */
 template <typename T1, typename T2>
-unordered_map<T1, T2>::unordered_map(unordered_map<T1, T2>& mp) : _max_bucket_count(357913941), vec(mp.vec.size(), nullptr), size(mp.size), load_factor(mp.load_factor), _max_load_factor(.75), hasher(std::hash<T1>()){
+unordered_map<T1, T2>::unordered_map(unordered_map<T1, T2>& mp) : _max_bucket_count(357913941), vec(mp.vec.size(), nullptr), _size(mp._size), _load_factor(mp._load_factor), _max_load_factor(.75), hasher(std::hash<T1>()){
     for (int i = 0; i < vec.size(); i++) {
         if (mp.vec[i] != nullptr) {
             Node* curr = mp.vec[i];
@@ -30,14 +30,14 @@ std::pair<typename unordered_map<T1, T2>::iterator, bool> unordered_map<T1, T2>:
     if (i != end()) {
         return std::pair<iterator, bool>(i, false);
     }
-    load_factor = ++size / double(vec.size());
-    if (load_factor >= _max_load_factor) {
+    _load_factor = ++_size / double(vec.size());
+    if (_load_factor >= _max_load_factor) {
         if(vec.size() < _max_bucket_count){  // if max_bucket_count reached do not rehash
-            rehash();
-            load_factor = size / double(vec.size());
+            rehash(vec.size() * 2);
+            _load_factor = _size / double(vec.size());
         }
-        if (size >= _max_bucket_count)
-            return std::pair<iterator, bool>(i, false); // return past-the-end iterator if max size reached
+        if (_size >= _max_bucket_count)
+            return std::pair<iterator, bool>(i, false); // return past-the-end iterator if max _size reached
     }
     std::size_t hs = hasher(data.first) % vec.size();
     Node* ins = vec[hs];
@@ -54,10 +54,13 @@ std::pair<typename unordered_map<T1, T2>::iterator, bool> unordered_map<T1, T2>:
     }
 }
 
-/* rehash a new vector of size nextPrime(vec.size() * 2) */
+/* rehash a new vector of size nextPrime(n) */
 template <typename T1, typename T2>
-void unordered_map<T1, T2>::rehash() {
-    int newBuckets = nextPrime(vec.size() * 2);
+void unordered_map<T1, T2>::rehash(int n) {
+    if (vec.size() > n)
+        return;
+
+    int newBuckets = nextPrime(n);
     std::vector<Node*> newVec(newBuckets, nullptr);
     iterator itr = begin();
     while (itr != end()) {
@@ -76,7 +79,7 @@ void unordered_map<T1, T2>::rehash() {
     vec = newVec;
 }
 
-/* deletes all elements in the vector without changing its size, load_factor, etc */
+/* deletes all elements in the vector without changing its size, _load_factor, etc */
 template <typename T1, typename T2>
 void unordered_map<T1, T2>::remove_all() {
     for(int i = 0; i < vec.size(); i++) {
@@ -98,8 +101,8 @@ void unordered_map<T1, T2>::remove_all() {
 template <typename T1, typename T2>
 void unordered_map<T1, T2>::clear() {
     remove_all();
-    size = 0; 
-    load_factor = 0;
+    _size = 0; 
+    _load_factor = 0;
 }
 
 /* find the nearest prime after n */
@@ -217,8 +220,14 @@ int unordered_map<T1, T2>::max_bucket_count() {
 
 /* return max_load_factor */
 template <typename T1, typename T2>
-int unordered_map<T1, T2>::max_load_factor() {
+double unordered_map<T1, T2>::max_load_factor() const {
     return _max_load_factor;
+}
+
+/* set max_load_factor */
+template <typename T1, typename T2>
+void unordered_map<T1, T2>::max_load_factor(double z) {
+    _max_load_factor = z;
 }
 
 /* return max_size */
@@ -227,10 +236,16 @@ int unordered_map<T1, T2>::max_size() {
     return _max_bucket_count;
 }
 
+/* return size */
+template <typename T1, typename T2>
+int unordered_map<T1, T2>::size() const {
+    return _size;
+}
+
 /* return true if the map is empty */
 template <typename T1, typename T2>
 bool unordered_map<T1, T2>::empty() {
-    return !size;
+    return !_size;
 }
 
 /* remove an element from the map */
@@ -256,13 +271,13 @@ void unordered_map<T1, T2>::erase(iterator itr) {
         curr->next = itr.node->next; // parent node points to node to delete next value
         delete itr.node;
     }
-    size--;
-    load_factor = size / (double)bucket_count();
+    _size--;
+    _load_factor = _size / (double)bucket_count();
 }
 
 /* remove an element from the map */
 template <typename T1, typename T2>
-void unordered_map<T1, T2>::erase(T1& key) {
+void unordered_map<T1, T2>::erase(T1 key) {
     erase(find(key));
 }
 
@@ -275,7 +290,7 @@ T2& unordered_map<T1, T2>::operator[](const T1& key){
 
 /* returns a reference to the value mapped at key, will throw out_of_range if key does not exist */
 template <typename T1, typename T2>
-T2& unordered_map<T1, T2>::at(const T1& key) const {
+T2& unordered_map<T1, T2>::at(const T1& key) {
     std::size_t hs = hasher(key) % bucket_count();
     Node* node = vec[hs];
     while (node != nullptr) {
@@ -310,7 +325,32 @@ unordered_map<T1, T2>& unordered_map<T1, T2>::operator=(const unordered_map<T1, 
             }
         }
     }
-    size = rhs->size;
-    load_factor = rhs.load_factor;
+    _size = rhs->_size;
+    _load_factor = rhs._load_factor;
     return this;
+}
+
+/* return the current load_factor */
+template <typename T1, typename T2>
+double unordered_map<T1, T2>::load_factor() const{
+    return _load_factor;
+}
+
+template <typename T1, typename T2>
+void unordered_map<T1, T2>::swap(unordered_map<T1, T2>& x) {
+    std::vector<Node*> t = x.vec;
+    x.vec = vec;
+    vec = t;
+
+    int t_int = x._size;
+    x._size = _size;
+    _size = t_int;
+
+    double t_double = x._load_factor;
+    x._load_factor = _load_factor;
+    _load_factor = t_double;
+    
+    t_double = x._max_load_factor;
+    x._max_load_factor = _max_load_factor;
+    _max_load_factor = t_double;
 }
