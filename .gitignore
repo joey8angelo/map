@@ -1,5 +1,7 @@
+.gitignore
 map.exe
 .vscode/
 main.exe
 tree.cpp
 a.exe
+main.cpp
